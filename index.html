@@ -128,6 +128,26 @@ footer {
 .scada-total .card { padding:13px; }
 .scada-total .value { font-size:22px; }
 
+/* Visual snow-gun animation: display only, never controls real equipment. */
+.gun-scene { height:132px; margin:4px 0 14px; overflow:hidden; border:1px solid #293a52; border-radius:9px; background:linear-gradient(#14243a 0%,#1b3550 68%,#dce8f2 69%,#a9bfd0 100%); position:relative; }
+.gun-scene svg { width:100%; height:100%; display:block; }
+.gun-turret { transform-box:fill-box; transform-origin:35% 80%; }
+.gun-fan { transform-box:fill-box; transform-origin:center; }
+.gun-snow { opacity:0; }
+.gun-scene.active .gun-turret { animation:gun-sweep 4s ease-in-out infinite alternate; }
+.gun-scene.active .gun-fan { animation:fan-spin .45s linear infinite; }
+.gun-scene.active .gun-snow { opacity:1; }
+.gun-scene.active .flake { animation:snow-blast 1.15s linear infinite; }
+.gun-scene.active .flake:nth-child(2n) { animation-delay:-.55s; }
+@keyframes gun-sweep { from { transform:rotate(-7deg); } to { transform:rotate(7deg); } }
+@keyframes fan-spin { to { transform:rotate(360deg); } }
+@keyframes snow-blast { from { transform:translate(0,0) scale(.65); opacity:.95; } to { transform:translate(72px,30px) scale(1.35); opacity:0; } }
+.ops-history-wrap { overflow-x:auto; }
+.ops-history { width:100%; min-width:480px; border-collapse:collapse; }
+.ops-history th,.ops-history td { padding:10px 8px; border-bottom:1px solid #344258; text-align:left; font-size:12px; }
+.ops-history th { color:#aab7ca; }
+.ops-history-empty { color:#94a3b8; padding:12px 0; font-size:13px; }
+
 </style>
 </head>
 
@@ -252,6 +272,32 @@ footer {
         <div class="scada-name">Snow Gun 1</div>
         <div class="scada-state stopped" id="state1"><span class="scada-lamp"></span><span>STOPPED</span></div>
       </div>
+
+      <div class="gun-scene" id="gunScene1" role="img" aria-label="Snow gun stopped">
+        <svg viewBox="0 0 300 132" aria-hidden="true">
+          <path d="M0 103 Q70 95 140 103 T300 101 V132 H0Z" fill="#edf5fb" opacity=".92"/>
+          <g class="gun-turret">
+            <path d="M70 101 L80 75 L111 75 L124 101Z" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
+            <rect x="84" y="67" width="28" height="12" rx="4" fill="#64748b"/>
+            <g class="gun-fan">
+              <circle cx="100" cy="55" r="15" fill="#0f172a" stroke="#cbd5e1" stroke-width="3"/>
+              <path d="M100 43 Q110 48 103 54 Q100 56 100 55Z M112 57 Q105 66 101 57 Q100 55 100 55Z M96 68 Q88 61 97 56 Q100 55 100 55Z M88 51 Q94 42 99 52 Q100 55 100 55Z" fill="#cbd5e1"/>
+              <circle cx="100" cy="55" r="3" fill="#38bdf8"/>
+            </g>
+            <path d="M103 62 L142 35 L155 42 L119 72Z" fill="#64748b" stroke="#cbd5e1" stroke-width="2"/>
+            <path d="M145 33 L164 24 L171 30 L156 44Z" fill="#cbd5e1"/>
+            <circle cx="168" cy="28" r="5" fill="#38bdf8"/>
+          </g>
+          <g class="gun-snow" fill="#fff">
+            <circle class="flake" cx="174" cy="27" r="3"/><circle class="flake" cx="180" cy="32" r="2.5"/>
+            <circle class="flake" cx="185" cy="24" r="2"/><circle class="flake" cx="192" cy="35" r="3"/>
+            <circle class="flake" cx="198" cy="28" r="2.5"/><circle class="flake" cx="204" cy="40" r="2"/>
+            <circle class="flake" cx="211" cy="32" r="3"/><circle class="flake" cx="218" cy="43" r="2"/>
+            <circle class="flake" cx="225" cy="36" r="2.5"/><circle class="flake" cx="233" cy="47" r="2"/>
+          </g>
+          <text x="12" y="20" fill="#dbeafe" font-size="10" font-family="Arial">SNOW GUN 1</text>
+        </svg>
+      </div>
       <label for="time1" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
       <input class="scada-time" type="datetime-local" id="time1" aria-label="Snow Gun 1 event time">
       <div class="scada-actions">
@@ -269,6 +315,32 @@ footer {
       <div class="scada-head">
         <div class="scada-name">Snow Gun 2</div>
         <div class="scada-state stopped" id="state2"><span class="scada-lamp"></span><span>STOPPED</span></div>
+      </div>
+
+      <div class="gun-scene" id="gunScene2" role="img" aria-label="Snow gun stopped">
+        <svg viewBox="0 0 300 132" aria-hidden="true">
+          <path d="M0 103 Q70 95 140 103 T300 101 V132 H0Z" fill="#edf5fb" opacity=".92"/>
+          <g class="gun-turret">
+            <path d="M70 101 L80 75 L111 75 L124 101Z" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
+            <rect x="84" y="67" width="28" height="12" rx="4" fill="#64748b"/>
+            <g class="gun-fan">
+              <circle cx="100" cy="55" r="15" fill="#0f172a" stroke="#cbd5e1" stroke-width="3"/>
+              <path d="M100 43 Q110 48 103 54 Q100 56 100 55Z M112 57 Q105 66 101 57 Q100 55 100 55Z M96 68 Q88 61 97 56 Q100 55 100 55Z M88 51 Q94 42 99 52 Q100 55 100 55Z" fill="#cbd5e1"/>
+              <circle cx="100" cy="55" r="3" fill="#38bdf8"/>
+            </g>
+            <path d="M103 62 L142 35 L155 42 L119 72Z" fill="#64748b" stroke="#cbd5e1" stroke-width="2"/>
+            <path d="M145 33 L164 24 L171 30 L156 44Z" fill="#cbd5e1"/>
+            <circle cx="168" cy="28" r="5" fill="#38bdf8"/>
+          </g>
+          <g class="gun-snow" fill="#fff">
+            <circle class="flake" cx="174" cy="27" r="3"/><circle class="flake" cx="180" cy="32" r="2.5"/>
+            <circle class="flake" cx="185" cy="24" r="2"/><circle class="flake" cx="192" cy="35" r="3"/>
+            <circle class="flake" cx="198" cy="28" r="2.5"/><circle class="flake" cx="204" cy="40" r="2"/>
+            <circle class="flake" cx="211" cy="32" r="3"/><circle class="flake" cx="218" cy="43" r="2"/>
+            <circle class="flake" cx="225" cy="36" r="2.5"/><circle class="flake" cx="233" cy="47" r="2"/>
+          </g>
+          <text x="12" y="20" fill="#dbeafe" font-size="10" font-family="Arial">SNOW GUN 2</text>
+        </svg>
       </div>
       <label for="time2" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
       <input class="scada-time" type="datetime-local" id="time2" aria-label="Snow Gun 2 event time">
@@ -288,6 +360,32 @@ footer {
         <div class="scada-name">Snow Gun 3</div>
         <div class="scada-state stopped" id="state3"><span class="scada-lamp"></span><span>STOPPED</span></div>
       </div>
+
+      <div class="gun-scene" id="gunScene3" role="img" aria-label="Snow gun stopped">
+        <svg viewBox="0 0 300 132" aria-hidden="true">
+          <path d="M0 103 Q70 95 140 103 T300 101 V132 H0Z" fill="#edf5fb" opacity=".92"/>
+          <g class="gun-turret">
+            <path d="M70 101 L80 75 L111 75 L124 101Z" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
+            <rect x="84" y="67" width="28" height="12" rx="4" fill="#64748b"/>
+            <g class="gun-fan">
+              <circle cx="100" cy="55" r="15" fill="#0f172a" stroke="#cbd5e1" stroke-width="3"/>
+              <path d="M100 43 Q110 48 103 54 Q100 56 100 55Z M112 57 Q105 66 101 57 Q100 55 100 55Z M96 68 Q88 61 97 56 Q100 55 100 55Z M88 51 Q94 42 99 52 Q100 55 100 55Z" fill="#cbd5e1"/>
+              <circle cx="100" cy="55" r="3" fill="#38bdf8"/>
+            </g>
+            <path d="M103 62 L142 35 L155 42 L119 72Z" fill="#64748b" stroke="#cbd5e1" stroke-width="2"/>
+            <path d="M145 33 L164 24 L171 30 L156 44Z" fill="#cbd5e1"/>
+            <circle cx="168" cy="28" r="5" fill="#38bdf8"/>
+          </g>
+          <g class="gun-snow" fill="#fff">
+            <circle class="flake" cx="174" cy="27" r="3"/><circle class="flake" cx="180" cy="32" r="2.5"/>
+            <circle class="flake" cx="185" cy="24" r="2"/><circle class="flake" cx="192" cy="35" r="3"/>
+            <circle class="flake" cx="198" cy="28" r="2.5"/><circle class="flake" cx="204" cy="40" r="2"/>
+            <circle class="flake" cx="211" cy="32" r="3"/><circle class="flake" cx="218" cy="43" r="2"/>
+            <circle class="flake" cx="225" cy="36" r="2.5"/><circle class="flake" cx="233" cy="47" r="2"/>
+          </g>
+          <text x="12" y="20" fill="#dbeafe" font-size="10" font-family="Arial">SNOW GUN 3</text>
+        </svg>
+      </div>
       <label for="time3" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
       <input class="scada-time" type="datetime-local" id="time3" aria-label="Snow Gun 3 event time">
       <div class="scada-actions">
@@ -303,6 +401,16 @@ footer {
     </section>
   </div>
   <div class="scada-note" id="opsMessage">Operations logger not yet connected. Configure the separate logging endpoint before recording real events.</div>
+  <div style="margin-top:20px;padding-top:16px;border-top:1px solid #344258">
+    <h3 style="font-size:15px;margin:0 0 12px">Latest 20 Operations Events</h3>
+    <div class="ops-history-wrap">
+      <table class="ops-history">
+        <thead><tr><th>Event Time</th><th>Equipment</th><th>Action</th><th>Runtime</th></tr></thead>
+        <tbody id="opsHistory"><tr><td colspan="4" class="ops-history-empty">Waiting for operations records…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="scada-note">Dashboard displays the latest 20 events. Full records remain محفوظ in the Google Sheet.</div>
+  </div>
 </div>
 
 <!-- GRAPH -->
@@ -587,6 +695,12 @@ function recordOperation(index, action) {
 
 function renderOperation(i) {
   const s = opsState[i];
+  const scene = document.getElementById('gunScene' + i);
+  if (scene) {
+    const active = s.status === 'RUNNING';
+    scene.classList.toggle('active',active);
+    scene.setAttribute('aria-label', active ? 'Snow gun rotating and producing a visual snow stream' : 'Snow gun stopped');
+  }
   const el = document.getElementById('state'+i);
   el.className = 'scada-state ' + (s.status === 'RUNNING' ? 'running' : s.status === 'FAULT' ? 'fault' : 'stopped');
   el.lastElementChild.textContent = s.status;
@@ -596,6 +710,24 @@ function renderOperation(i) {
   document.getElementById('lastStop'+i).textContent = s.lastStop;
   document.getElementById('tonight'+i).textContent = Number(s.tonight || 0).toFixed(2) + ' h';
   document.getElementById('season'+i).textContent = Number(s.season || 0).toFixed(2) + ' h';
+}
+
+
+function renderOperationsHistory(events) {
+  const body = document.getElementById('opsHistory');
+  if (!body) return;
+  if (!Array.isArray(events) || events.length === 0) {
+    body.innerHTML = '<tr><td colspan="4" class="ops-history-empty">No operations events recorded yet.</td></tr>';
+    return;
+  }
+  body.innerHTML = events.slice(0,20).map(event => {
+    const actionClass = event.action === 'START' ? 'good' : 'neutral';
+    return '<tr><td>' + escapeHTML(event.time || '—') + '</td><td>' +
+      escapeHTML(event.equipment || '—') + '</td><td><strong class="' + actionClass + '">' +
+      escapeHTML(event.action || '—') + '</strong></td><td>' +
+      (event.runtime === '' || event.runtime == null ? '—' : Number(event.runtime).toFixed(2) + ' h') +
+      '</td></tr>';
+  }).join('');
 }
 
 function setOpsMessage(message,kind) {
@@ -612,6 +744,7 @@ function receiveOperationsState(data) {
     opsState[i] = Object.assign(opsState[i],item);
     renderOperation(i);
   });
+  renderOperationsHistory(data.events || []);
   opsUnlocked = true;
   document.getElementById('opsAccessCode').value = getOpsAccessCode();
   if (pendingOperation) {
