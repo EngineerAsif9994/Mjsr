@@ -231,7 +231,7 @@ footer {
         <div class="scada-state stopped" id="state0"><span class="scada-lamp"></span><span>STOPPED</span></div>
       </div>
       <label for="time0" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
-      <input class="scada-time" type="time" id="time0" aria-label="Pump House event time">
+      <input class="scada-time" type="datetime-local" id="time0" aria-label="Pump House event time">
       <div class="scada-actions">
         <button class="scada-btn scada-start" id="start0" onclick="recordOperation(0,'START')">▶ START</button>
         <button class="scada-btn scada-stop" id="stop0" onclick="recordOperation(0,'STOP')">■ STOP</button>
@@ -249,7 +249,7 @@ footer {
         <div class="scada-state stopped" id="state1"><span class="scada-lamp"></span><span>STOPPED</span></div>
       </div>
       <label for="time1" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
-      <input class="scada-time" type="time" id="time1" aria-label="Snow Gun 1 event time">
+      <input class="scada-time" type="datetime-local" id="time1" aria-label="Snow Gun 1 event time">
       <div class="scada-actions">
         <button class="scada-btn scada-start" id="start1" onclick="recordOperation(1,'START')">▶ START</button>
         <button class="scada-btn scada-stop" id="stop1" onclick="recordOperation(1,'STOP')">■ STOP</button>
@@ -267,7 +267,7 @@ footer {
         <div class="scada-state stopped" id="state2"><span class="scada-lamp"></span><span>STOPPED</span></div>
       </div>
       <label for="time2" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
-      <input class="scada-time" type="time" id="time2" aria-label="Snow Gun 2 event time">
+      <input class="scada-time" type="datetime-local" id="time2" aria-label="Snow Gun 2 event time">
       <div class="scada-actions">
         <button class="scada-btn scada-start" id="start2" onclick="recordOperation(2,'START')">▶ START</button>
         <button class="scada-btn scada-stop" id="stop2" onclick="recordOperation(2,'STOP')">■ STOP</button>
@@ -285,7 +285,7 @@ footer {
         <div class="scada-state stopped" id="state3"><span class="scada-lamp"></span><span>STOPPED</span></div>
       </div>
       <label for="time3" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
-      <input class="scada-time" type="time" id="time3" aria-label="Snow Gun 3 event time">
+      <input class="scada-time" type="datetime-local" id="time3" aria-label="Snow Gun 3 event time">
       <div class="scada-actions">
         <button class="scada-btn scada-start" id="start3" onclick="recordOperation(3,'START')">▶ START</button>
         <button class="scada-btn scada-stop" id="stop3" onclick="recordOperation(3,'STOP')">■ STOP</button>
@@ -542,9 +542,8 @@ const opsState = EQUIPMENT.map(() => ({status:'STOPPED',lastStart:'—',lastStop
 
 function setDefaultOperationTimes() {
   const now = new Date();
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mm = String(now.getMinutes()).padStart(2,'0');
-  document.querySelectorAll('.scada-time').forEach(el => { if (!el.value) el.value = hh + ':' + mm; });
+  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0,16);
+  document.querySelectorAll('.scada-time').forEach(el => { if (!el.value) el.value = local; });
 }
 
 function recordOperation(index, action) {
@@ -559,7 +558,7 @@ function recordOperation(index, action) {
   }
   const form = document.createElement('form');
   form.method = 'POST'; form.action = OPS_URL; form.target = 'opsSubmitFrame';
-  const values = {action:action,equipment:EQUIPMENT[index],enteredTime:time,clientTimestamp:new Date().toISOString()};
+  const values = {action:action,equipment:EQUIPMENT[index],enteredAt:time,clientTimestamp:new Date().toISOString()};
   Object.keys(values).forEach(key => {
     const input = document.createElement('input'); input.type='hidden'; input.name=key; input.value=values[key]; form.appendChild(input);
   });
