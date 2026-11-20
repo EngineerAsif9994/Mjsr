@@ -142,6 +142,12 @@ footer {
 @keyframes gun-sweep { from { transform:rotate(-7deg); } to { transform:rotate(7deg); } }
 @keyframes fan-spin { to { transform:rotate(360deg); } }
 @keyframes snow-blast { from { transform:translate(0,0) scale(.65); opacity:.95; } to { transform:translate(72px,30px) scale(1.35); opacity:0; } }
+.pump-scene.active .pump-rotor { transform-box:fill-box; transform-origin:center; animation:fan-spin .7s linear infinite; }
+.pump-scene.active .pump-water { stroke-dasharray:9 7; animation:pump-water-flow .55s linear infinite; }
+.pump-scene.active .pump-flow { animation:pump-flow-move .9s ease-in-out infinite alternate; }
+.pump-flow { transform-box:fill-box; transform-origin:center; }
+@keyframes pump-water-flow { to { stroke-dashoffset:-32; } }
+@keyframes pump-flow-move { from { transform:translateX(-5px); opacity:.45; } to { transform:translateX(8px); opacity:1; } }
 .ops-history-wrap { overflow-x:auto; }
 .ops-history { width:100%; min-width:480px; border-collapse:collapse; }
 .ops-history th,.ops-history td { padding:10px 8px; border-bottom:1px solid #344258; text-align:left; font-size:12px; }
