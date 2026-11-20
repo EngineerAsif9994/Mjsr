@@ -145,6 +145,11 @@ footer {
 .realistic-gun-scene .gun-fan { transform-box:fill-box; transform-origin:50% 50%; }
 .realistic-gun-scene.active .gun-turret { animation:gun-sweep 5s ease-in-out infinite alternate; }
 .realistic-gun-scene.active .gun-fan { animation:fan-spin .16s linear infinite; }
+.realistic-gun-scene .gun-fan { transform-box:fill-box; transform-origin:50% 50%; }
+.realistic-gun-scene.active .gun-snow { filter:drop-shadow(0 0 5px rgba(255,255,255,.9)); }
+.realistic-gun-scene.active .snow-cloud { animation:cloud-pulse .55s ease-in-out infinite alternate; }
+.realistic-gun-scene.active .flake { animation:snow-blast .65s linear infinite; }
+.realistic-gun-scene.active .flake:nth-child(2n) { animation-delay:-.3s; }
 .realistic-gun-scene.active .gun-snow { opacity:1; }
 .realistic-gun-scene.active .snow-cloud { animation:cloud-pulse .8s ease-in-out infinite alternate; transform-origin:center; }
 .realistic-gun-scene.active .flake { animation:snow-blast .75s linear infinite; }
@@ -152,7 +157,7 @@ footer {
 @keyframes cloud-pulse { from { opacity:.45; transform:scale(.88); } to { opacity:.98; transform:scale(1.12); } }
 @keyframes gun-sweep { from { transform:rotate(-7deg); } to { transform:rotate(7deg); } }
 @keyframes fan-spin { to { transform:rotate(360deg); } }
-@keyframes snow-blast { from { transform:translate(0,0) scale(.65); opacity:.95; } to { transform:translate(72px,30px) scale(1.35); opacity:0; } }
+@keyframes snow-blast { from { transform:translate(0,0) scale(.65); opacity:.95; } to { transform:translate(-38px,26px) scale(1.5); opacity:0; } }
 .pump-scene.active .pump-rotor { transform-box:fill-box; transform-origin:50% 50%; animation:pump-rotate .42s linear infinite !important; }
 .pump-scene.active .pump-water { stroke:#38bdf8; stroke-width:7; stroke-dasharray:7 5; animation:pump-water-flow .42s linear infinite; filter:drop-shadow(0 0 3px #38bdf8); }
 .pump-scene.active .pump-flow { animation:pump-flow-move .55s ease-in-out infinite alternate; }
@@ -323,50 +328,68 @@ footer {
 
       <div class="gun-scene realistic-gun-scene" id="gunScene1" role="img" aria-label="Snow gun 1 stopped">
         <svg viewBox="0 0 300 160" aria-hidden="true">
-          <defs>
-            <linearGradient id="gunBody1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d1d5db"/><stop offset=".48" stop-color="#64748b"/><stop offset="1" stop-color="#263548"/></linearGradient>
-            <linearGradient id="gunBarrel1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94a3b8"/><stop offset=".5" stop-color="#334155"/><stop offset="1" stop-color="#0f172a"/></linearGradient>
-            <radialGradient id="gunFanGlass1"><stop offset="0" stop-color="#0b1728"/><stop offset=".72" stop-color="#1e293b"/><stop offset="1" stop-color="#64748b"/></radialGradient>
-          </defs>
-          <path d="M0 119 Q70 111 145 119 T300 116 V160 H0Z" fill="#e6f0f7"/>
-          <path d="M0 120 Q75 115 150 122 T300 119" fill="none" stroke="#fff" stroke-width="3" opacity=".8"/>
-          <g opacity=".28" fill="#fff"><circle cx="35" cy="137" r="2"/><circle cx="73" cy="129" r="2"/><circle cx="255" cy="139" r="2"/><circle cx="278" cy="128" r="2"/></g>
-          <path d="M104 105 L119 82 H166 L183 105Z" fill="#334155" stroke="#cbd5e1" stroke-width="2"/>
-          <path d="M120 103 L126 71 H158 L169 103" fill="none" stroke="#94a3b8" stroke-width="5"/>
-          <path d="M102 105 H190" stroke="#1e293b" stroke-width="7" stroke-linecap="round"/>
-          <circle cx="116" cy="113" r="10" fill="#111827" stroke="#94a3b8" stroke-width="3"/><circle cx="116" cy="113" r="3" fill="#cbd5e1"/>
-          <circle cx="177" cy="113" r="10" fill="#111827" stroke="#94a3b8" stroke-width="3"/><circle cx="177" cy="113" r="3" fill="#cbd5e1"/>
-          <g class="gun-turret">
-            <path d="M130 83 L141 57 L151 61 L145 89Z" fill="#475569" stroke="#cbd5e1" stroke-width="2"/>
-            <path d="M139 57 L151 49" stroke="#cbd5e1" stroke-width="5" stroke-linecap="round"/>
-            <circle cx="151" cy="49" r="29" fill="url(#gunBody1)" stroke="#e2e8f0" stroke-width="3"/>
-            <circle cx="151" cy="49" r="23" fill="url(#gunFanGlass1)" stroke="#0f172a" stroke-width="2"/>
-            <g class="gun-fan">
-              <path d="M151 49 C140 42 140 29 150 27 Q158 27 156 39Z" fill="#cbd5e1" stroke="#64748b"/>
-              <path d="M151 49 C158 38 171 39 173 49 Q173 57 161 55Z" fill="#cbd5e1" stroke="#64748b"/>
-              <path d="M151 49 C162 56 162 69 152 71 Q144 71 146 59Z" fill="#cbd5e1" stroke="#64748b"/>
-              <path d="M151 49 C144 60 131 59 129 49 Q129 41 141 43Z" fill="#cbd5e1" stroke="#64748b"/>
-              <circle cx="151" cy="49" r="6" fill="#38bdf8" stroke="#e0f2fe" stroke-width="2"/>
-            </g>
-            <circle cx="151" cy="49" r="25" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="2 4"/>
-            <path d="M171 35 L232 13 Q241 10 245 18 L248 27 Q250 34 241 37 L181 57Z" fill="url(#gunBarrel1)" stroke="#cbd5e1" stroke-width="2"/>
-            <path d="M230 14 L247 9 L255 29 L244 35Z" fill="#64748b" stroke="#e2e8f0" stroke-width="2"/>
-            <ellipse cx="249" cy="22" rx="5" ry="12" transform="rotate(-22 249 22)" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
-            <path d="M181 40 L231 22" stroke="#e2e8f0" stroke-width="2" opacity=".55"/>
-            <path d="M137 82 L163 67" stroke="#0f172a" stroke-width="7" stroke-linecap="round"/>
-            <path d="M140 79 L160 68" stroke="#facc15" stroke-width="3" stroke-linecap="round"/>
-          </g>
-          <g class="gun-snow">
-            <path class="snow-cloud" d="M250 16 Q266 3 278 16 Q292 12 298 26 Q290 39 275 34 Q262 43 250 31Z" fill="#fff" opacity=".88"/>
-            <g fill="#fff">
-              <circle class="flake" cx="258" cy="18" r="3"/><circle class="flake" cx="268" cy="10" r="2.5"/>
-              <circle class="flake" cx="279" cy="23" r="3"/><circle class="flake" cx="289" cy="17" r="2"/>
-              <circle class="flake" cx="270" cy="34" r="2.5"/><circle class="flake" cx="294" cy="34" r="2.5"/>
-              <circle class="flake" cx="261" cy="40" r="2"/><circle class="flake" cx="284" cy="43" r="2"/>
-            </g>
-          </g>
-          <text x="10" y="16" fill="#e2e8f0" font-size="10" font-weight="bold" font-family="Arial">FAN SNOW GUN 1</text>
-        </svg>
+  <defs>
+    <linearGradient id="trYellow1" x1="0" y1="0" x2="0.8" y2="1"><stop offset="0" stop-color="#ffe36b"/><stop offset=".48" stop-color="#f5b900"/><stop offset="1" stop-color="#bd7800"/></linearGradient>
+    <linearGradient id="trWhite1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#cbd5e1"/></linearGradient>
+    <linearGradient id="trSteel1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".5" stop-color="#64748b"/><stop offset="1" stop-color="#334155"/></linearGradient>
+    <radialGradient id="trFan1"><stop offset="0" stop-color="#475569"/><stop offset=".7" stop-color="#111827"/><stop offset="1" stop-color="#020617"/></radialGradient>
+  </defs>
+  <!-- alpine night background and snow-covered ground -->
+  <path d="M0 121 L34 112 66 118 102 110 142 118 185 111 225 117 260 110 300 116 V160 H0Z" fill="#eaf3fa"/>
+  <path d="M0 122 Q70 114 145 121 T300 118" fill="none" stroke="#fff" stroke-width="3"/>
+  <g opacity=".2" fill="#94a3b8"><circle cx="22" cy="139" r="2"/><circle cx="56" cy="129" r="1.8"/><circle cx="270" cy="138" r="2"/><circle cx="245" cy="128" r="1.5"/></g>
+  <!-- mobile steel carriage, axle and wheels -->
+  <path d="M84 112 H246 L263 122 H74Z" fill="url(#trSteel1)" stroke="#334155" stroke-width="2"/>
+  <path d="M98 108 L82 145 M237 108 L254 145" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+  <path d="M79 144 H91 M247 144 H261" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+  <g><circle cx="103" cy="125" r="13" fill="#111827" stroke="#cbd5e1" stroke-width="3"/><circle cx="103" cy="125" r="5" fill="#64748b" stroke="#e2e8f0" stroke-width="2"/><circle cx="231" cy="125" r="13" fill="#111827" stroke="#cbd5e1" stroke-width="3"/><circle cx="231" cy="125" r="5" fill="#64748b" stroke="#e2e8f0" stroke-width="2"/></g>
+  <!-- black power/control cabinet and support cradle -->
+  <path d="M127 91 L213 91 225 111 H119Z" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+  <rect x="145" y="91" width="51" height="28" rx="3" fill="#111827" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="151" y="96" width="22" height="10" rx="1" fill="#1e293b" stroke="#64748b"/>
+  <circle cx="181" cy="101" r="3" fill="#22c55e"/><circle cx="190" cy="101" r="3" fill="#f59e0b"/>
+  <path d="M133 91 L119 78 M205 91 L218 78" stroke="#64748b" stroke-width="7" stroke-linecap="round"/>
+  <path d="M130 87 L212 87" stroke="#cbd5e1" stroke-width="4"/>
+  <!-- yellow and white aerodynamic TR-series fan housing -->
+  <path d="M82 25 Q91 13 111 13 H225 Q245 13 258 30 L269 47 Q274 57 265 68 L246 87 Q237 96 216 96 H110 Q91 92 82 78Z" fill="url(#trYellow1)" stroke="#9a6700" stroke-width="2"/>
+  <path d="M160 18 H226 Q244 18 256 34 L263 45 H157Z" fill="#fff" opacity=".94"/>
+  <path d="M160 18 H226 Q244 18 256 34 L263 45" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+  <path d="M168 51 L245 51" stroke="#fff7cc" stroke-width="1.5" opacity=".55"/>
+  <path d="M188 62 L248 62" stroke="#9a6700" stroke-width="1" opacity=".4"/>
+  <text x="184" y="39" fill="#1f2937" font-size="8" font-weight="900" letter-spacing=".7" font-family="Arial">TECHNOALPIN</text>
+  <text x="220" y="77" fill="#fff7cc" font-size="11" font-weight="900" font-family="Arial">TR10</text>
+  <!-- black lower compressor / motor housing -->
+  <path d="M117 78 Q135 72 153 80 L169 94 H116Z" fill="#111827" stroke="#475569" stroke-width="2"/>
+  <path d="M126 82 L145 82 M128 86 L149 86" stroke="#64748b" stroke-width="2"/>
+  <!-- fan front ring and protective grille -->
+  <circle cx="84" cy="57" r="44" fill="url(#trWhite1)" stroke="#64748b" stroke-width="3"/>
+  <circle cx="84" cy="57" r="37" fill="#0b1220" stroke="#f8fafc" stroke-width="2"/>
+  <circle cx="84" cy="57" r="32" fill="url(#trFan1)" stroke="#475569" stroke-width="1.5"/>
+  <g class="gun-fan">
+    <path d="M84 57 C68 51 65 39 72 29 Q79 23 86 39Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <path d="M84 57 C90 41 102 38 111 46 Q115 54 99 60Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <path d="M84 57 C100 63 103 75 96 84 Q89 90 82 75Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <path d="M84 57 C78 73 66 76 57 68 Q53 60 69 54Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <circle cx="84" cy="57" r="6" fill="#cbd5e1" stroke="#111827" stroke-width="2"/>
+  </g>
+  <g fill="none" stroke="#94a3b8" stroke-width="1.5" opacity=".95">
+    <circle cx="84" cy="57" r="34"/>
+    <path d="M84 23 V91 M50 57 H118 M60 33 L108 81 M60 81 L108 33 M69 25 L99 89 M51 43 L117 71 M51 71 L117 43 M69 89 L99 25"/>
+  </g>
+  <circle cx="84" cy="57" r="41" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="2 5"/>
+  <!-- side nozzle / atomizer details -->
+  <g fill="#e2e8f0" stroke="#64748b" stroke-width="1"><circle cx="111" cy="26" r="2"/><circle cx="124" cy="22" r="2"/><circle cx="138" cy="20" r="2"/><circle cx="151" cy="20" r="2"/><circle cx="164" cy="20" r="2"/></g>
+  <!-- animated snow stream exits the fan face -->
+  <g class="gun-snow">
+    <path class="snow-cloud" d="M42 28 Q27 16 16 27 Q3 25 -2 40 Q2 55 16 51 Q27 64 42 51 Q52 42 42 28Z" fill="#fff" opacity=".9"/>
+    <g fill="#fff">
+      <circle class="flake" cx="43" cy="34" r="3"/><circle class="flake" cx="32" cy="25" r="2.5"/><circle class="flake" cx="21" cy="42" r="3"/>
+      <circle class="flake" cx="39" cy="54" r="2.4"/><circle class="flake" cx="12" cy="31" r="2"/><circle class="flake" cx="5" cy="48" r="2.5"/>
+      <circle class="flake" cx="29" cy="61" r="2"/><circle class="flake" cx="16" cy="58" r="1.8"/>
+    </g>
+  </g>
+  <text x="10" y="12" fill="#dbeafe" font-size="8" font-weight="bold" font-family="Arial">FAN SNOW GUN 1</text>
+</svg>
       </div>
       <label for="time1" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
       <input class="scada-time" type="datetime-local" id="time1" aria-label="Snow Gun 1 event time">
@@ -389,50 +412,68 @@ footer {
 
       <div class="gun-scene realistic-gun-scene" id="gunScene2" role="img" aria-label="Snow gun 2 stopped">
         <svg viewBox="0 0 300 160" aria-hidden="true">
-          <defs>
-            <linearGradient id="gunBody2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d1d5db"/><stop offset=".48" stop-color="#64748b"/><stop offset="1" stop-color="#263548"/></linearGradient>
-            <linearGradient id="gunBarrel2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94a3b8"/><stop offset=".5" stop-color="#334155"/><stop offset="1" stop-color="#0f172a"/></linearGradient>
-            <radialGradient id="gunFanGlass2"><stop offset="0" stop-color="#0b1728"/><stop offset=".72" stop-color="#1e293b"/><stop offset="1" stop-color="#64748b"/></radialGradient>
-          </defs>
-          <path d="M0 119 Q70 111 145 119 T300 116 V160 H0Z" fill="#e6f0f7"/>
-          <path d="M0 120 Q75 115 150 122 T300 119" fill="none" stroke="#fff" stroke-width="3" opacity=".8"/>
-          <g opacity=".28" fill="#fff"><circle cx="35" cy="137" r="2"/><circle cx="73" cy="129" r="2"/><circle cx="255" cy="139" r="2"/><circle cx="278" cy="128" r="2"/></g>
-          <path d="M104 105 L119 82 H166 L183 105Z" fill="#334155" stroke="#cbd5e1" stroke-width="2"/>
-          <path d="M120 103 L126 71 H158 L169 103" fill="none" stroke="#94a3b8" stroke-width="5"/>
-          <path d="M102 105 H190" stroke="#1e293b" stroke-width="7" stroke-linecap="round"/>
-          <circle cx="116" cy="113" r="10" fill="#111827" stroke="#94a3b8" stroke-width="3"/><circle cx="116" cy="113" r="3" fill="#cbd5e1"/>
-          <circle cx="177" cy="113" r="10" fill="#111827" stroke="#94a3b8" stroke-width="3"/><circle cx="177" cy="113" r="3" fill="#cbd5e1"/>
-          <g class="gun-turret">
-            <path d="M130 83 L141 57 L151 61 L145 89Z" fill="#475569" stroke="#cbd5e1" stroke-width="2"/>
-            <path d="M139 57 L151 49" stroke="#cbd5e1" stroke-width="5" stroke-linecap="round"/>
-            <circle cx="151" cy="49" r="29" fill="url(#gunBody2)" stroke="#e2e8f0" stroke-width="3"/>
-            <circle cx="151" cy="49" r="23" fill="url(#gunFanGlass2)" stroke="#0f172a" stroke-width="2"/>
-            <g class="gun-fan">
-              <path d="M151 49 C140 42 140 29 150 27 Q158 27 156 39Z" fill="#cbd5e1" stroke="#64748b"/>
-              <path d="M151 49 C158 38 171 39 173 49 Q173 57 161 55Z" fill="#cbd5e1" stroke="#64748b"/>
-              <path d="M151 49 C162 56 162 69 152 71 Q144 71 146 59Z" fill="#cbd5e1" stroke="#64748b"/>
-              <path d="M151 49 C144 60 131 59 129 49 Q129 41 141 43Z" fill="#cbd5e1" stroke="#64748b"/>
-              <circle cx="151" cy="49" r="6" fill="#38bdf8" stroke="#e0f2fe" stroke-width="2"/>
-            </g>
-            <circle cx="151" cy="49" r="25" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="2 4"/>
-            <path d="M171 35 L232 13 Q241 10 245 18 L248 27 Q250 34 241 37 L181 57Z" fill="url(#gunBarrel2)" stroke="#cbd5e1" stroke-width="2"/>
-            <path d="M230 14 L247 9 L255 29 L244 35Z" fill="#64748b" stroke="#e2e8f0" stroke-width="2"/>
-            <ellipse cx="249" cy="22" rx="5" ry="12" transform="rotate(-22 249 22)" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
-            <path d="M181 40 L231 22" stroke="#e2e8f0" stroke-width="2" opacity=".55"/>
-            <path d="M137 82 L163 67" stroke="#0f172a" stroke-width="7" stroke-linecap="round"/>
-            <path d="M140 79 L160 68" stroke="#facc15" stroke-width="3" stroke-linecap="round"/>
-          </g>
-          <g class="gun-snow">
-            <path class="snow-cloud" d="M250 16 Q266 3 278 16 Q292 12 298 26 Q290 39 275 34 Q262 43 250 31Z" fill="#fff" opacity=".88"/>
-            <g fill="#fff">
-              <circle class="flake" cx="258" cy="18" r="3"/><circle class="flake" cx="268" cy="10" r="2.5"/>
-              <circle class="flake" cx="279" cy="23" r="3"/><circle class="flake" cx="289" cy="17" r="2"/>
-              <circle class="flake" cx="270" cy="34" r="2.5"/><circle class="flake" cx="294" cy="34" r="2.5"/>
-              <circle class="flake" cx="261" cy="40" r="2"/><circle class="flake" cx="284" cy="43" r="2"/>
-            </g>
-          </g>
-          <text x="10" y="16" fill="#e2e8f0" font-size="10" font-weight="bold" font-family="Arial">FAN SNOW GUN 2</text>
-        </svg>
+  <defs>
+    <linearGradient id="trYellow2" x1="0" y1="0" x2="0.8" y2="1"><stop offset="0" stop-color="#ffe36b"/><stop offset=".48" stop-color="#f5b900"/><stop offset="1" stop-color="#bd7800"/></linearGradient>
+    <linearGradient id="trWhite2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#cbd5e1"/></linearGradient>
+    <linearGradient id="trSteel2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".5" stop-color="#64748b"/><stop offset="1" stop-color="#334155"/></linearGradient>
+    <radialGradient id="trFan2"><stop offset="0" stop-color="#475569"/><stop offset=".7" stop-color="#111827"/><stop offset="1" stop-color="#020617"/></radialGradient>
+  </defs>
+  <!-- alpine night background and snow-covered ground -->
+  <path d="M0 121 L34 112 66 118 102 110 142 118 185 111 225 117 260 110 300 116 V160 H0Z" fill="#eaf3fa"/>
+  <path d="M0 122 Q70 114 145 121 T300 118" fill="none" stroke="#fff" stroke-width="3"/>
+  <g opacity=".2" fill="#94a3b8"><circle cx="22" cy="139" r="2"/><circle cx="56" cy="129" r="1.8"/><circle cx="270" cy="138" r="2"/><circle cx="245" cy="128" r="1.5"/></g>
+  <!-- mobile steel carriage, axle and wheels -->
+  <path d="M84 112 H246 L263 122 H74Z" fill="url(#trSteel2)" stroke="#334155" stroke-width="2"/>
+  <path d="M98 108 L82 145 M237 108 L254 145" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+  <path d="M79 144 H91 M247 144 H261" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+  <g><circle cx="103" cy="125" r="13" fill="#111827" stroke="#cbd5e1" stroke-width="3"/><circle cx="103" cy="125" r="5" fill="#64748b" stroke="#e2e8f0" stroke-width="2"/><circle cx="231" cy="125" r="13" fill="#111827" stroke="#cbd5e1" stroke-width="3"/><circle cx="231" cy="125" r="5" fill="#64748b" stroke="#e2e8f0" stroke-width="2"/></g>
+  <!-- black power/control cabinet and support cradle -->
+  <path d="M127 91 L213 91 225 111 H119Z" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+  <rect x="145" y="91" width="51" height="28" rx="3" fill="#111827" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="151" y="96" width="22" height="10" rx="1" fill="#1e293b" stroke="#64748b"/>
+  <circle cx="181" cy="101" r="3" fill="#22c55e"/><circle cx="190" cy="101" r="3" fill="#f59e0b"/>
+  <path d="M133 91 L119 78 M205 91 L218 78" stroke="#64748b" stroke-width="7" stroke-linecap="round"/>
+  <path d="M130 87 L212 87" stroke="#cbd5e1" stroke-width="4"/>
+  <!-- yellow and white aerodynamic TR-series fan housing -->
+  <path d="M82 25 Q91 13 111 13 H225 Q245 13 258 30 L269 47 Q274 57 265 68 L246 87 Q237 96 216 96 H110 Q91 92 82 78Z" fill="url(#trYellow2)" stroke="#9a6700" stroke-width="2"/>
+  <path d="M160 18 H226 Q244 18 256 34 L263 45 H157Z" fill="#fff" opacity=".94"/>
+  <path d="M160 18 H226 Q244 18 256 34 L263 45" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+  <path d="M168 51 L245 51" stroke="#fff7cc" stroke-width="1.5" opacity=".55"/>
+  <path d="M188 62 L248 62" stroke="#9a6700" stroke-width="1" opacity=".4"/>
+  <text x="184" y="39" fill="#1f2937" font-size="8" font-weight="900" letter-spacing=".7" font-family="Arial">TECHNOALPIN</text>
+  <text x="220" y="77" fill="#fff7cc" font-size="11" font-weight="900" font-family="Arial">TR10</text>
+  <!-- black lower compressor / motor housing -->
+  <path d="M117 78 Q135 72 153 80 L169 94 H116Z" fill="#111827" stroke="#475569" stroke-width="2"/>
+  <path d="M126 82 L145 82 M128 86 L149 86" stroke="#64748b" stroke-width="2"/>
+  <!-- fan front ring and protective grille -->
+  <circle cx="84" cy="57" r="44" fill="url(#trWhite2)" stroke="#64748b" stroke-width="3"/>
+  <circle cx="84" cy="57" r="37" fill="#0b1220" stroke="#f8fafc" stroke-width="2"/>
+  <circle cx="84" cy="57" r="32" fill="url(#trFan2)" stroke="#475569" stroke-width="1.5"/>
+  <g class="gun-fan">
+    <path d="M84 57 C68 51 65 39 72 29 Q79 23 86 39Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <path d="M84 57 C90 41 102 38 111 46 Q115 54 99 60Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <path d="M84 57 C100 63 103 75 96 84 Q89 90 82 75Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <path d="M84 57 C78 73 66 76 57 68 Q53 60 69 54Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <circle cx="84" cy="57" r="6" fill="#cbd5e1" stroke="#111827" stroke-width="2"/>
+  </g>
+  <g fill="none" stroke="#94a3b8" stroke-width="1.5" opacity=".95">
+    <circle cx="84" cy="57" r="34"/>
+    <path d="M84 23 V91 M50 57 H118 M60 33 L108 81 M60 81 L108 33 M69 25 L99 89 M51 43 L117 71 M51 71 L117 43 M69 89 L99 25"/>
+  </g>
+  <circle cx="84" cy="57" r="41" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="2 5"/>
+  <!-- side nozzle / atomizer details -->
+  <g fill="#e2e8f0" stroke="#64748b" stroke-width="1"><circle cx="111" cy="26" r="2"/><circle cx="124" cy="22" r="2"/><circle cx="138" cy="20" r="2"/><circle cx="151" cy="20" r="2"/><circle cx="164" cy="20" r="2"/></g>
+  <!-- animated snow stream exits the fan face -->
+  <g class="gun-snow">
+    <path class="snow-cloud" d="M42 28 Q27 16 16 27 Q3 25 -2 40 Q2 55 16 51 Q27 64 42 51 Q52 42 42 28Z" fill="#fff" opacity=".9"/>
+    <g fill="#fff">
+      <circle class="flake" cx="43" cy="34" r="3"/><circle class="flake" cx="32" cy="25" r="2.5"/><circle class="flake" cx="21" cy="42" r="3"/>
+      <circle class="flake" cx="39" cy="54" r="2.4"/><circle class="flake" cx="12" cy="31" r="2"/><circle class="flake" cx="5" cy="48" r="2.5"/>
+      <circle class="flake" cx="29" cy="61" r="2"/><circle class="flake" cx="16" cy="58" r="1.8"/>
+    </g>
+  </g>
+  <text x="10" y="12" fill="#dbeafe" font-size="8" font-weight="bold" font-family="Arial">FAN SNOW GUN 2</text>
+</svg>
       </div>
       <label for="time2" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
       <input class="scada-time" type="datetime-local" id="time2" aria-label="Snow Gun 2 event time">
@@ -455,50 +496,68 @@ footer {
 
       <div class="gun-scene realistic-gun-scene" id="gunScene3" role="img" aria-label="Snow gun 3 stopped">
         <svg viewBox="0 0 300 160" aria-hidden="true">
-          <defs>
-            <linearGradient id="gunBody3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d1d5db"/><stop offset=".48" stop-color="#64748b"/><stop offset="1" stop-color="#263548"/></linearGradient>
-            <linearGradient id="gunBarrel3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94a3b8"/><stop offset=".5" stop-color="#334155"/><stop offset="1" stop-color="#0f172a"/></linearGradient>
-            <radialGradient id="gunFanGlass3"><stop offset="0" stop-color="#0b1728"/><stop offset=".72" stop-color="#1e293b"/><stop offset="1" stop-color="#64748b"/></radialGradient>
-          </defs>
-          <path d="M0 119 Q70 111 145 119 T300 116 V160 H0Z" fill="#e6f0f7"/>
-          <path d="M0 120 Q75 115 150 122 T300 119" fill="none" stroke="#fff" stroke-width="3" opacity=".8"/>
-          <g opacity=".28" fill="#fff"><circle cx="35" cy="137" r="2"/><circle cx="73" cy="129" r="2"/><circle cx="255" cy="139" r="2"/><circle cx="278" cy="128" r="2"/></g>
-          <path d="M104 105 L119 82 H166 L183 105Z" fill="#334155" stroke="#cbd5e1" stroke-width="2"/>
-          <path d="M120 103 L126 71 H158 L169 103" fill="none" stroke="#94a3b8" stroke-width="5"/>
-          <path d="M102 105 H190" stroke="#1e293b" stroke-width="7" stroke-linecap="round"/>
-          <circle cx="116" cy="113" r="10" fill="#111827" stroke="#94a3b8" stroke-width="3"/><circle cx="116" cy="113" r="3" fill="#cbd5e1"/>
-          <circle cx="177" cy="113" r="10" fill="#111827" stroke="#94a3b8" stroke-width="3"/><circle cx="177" cy="113" r="3" fill="#cbd5e1"/>
-          <g class="gun-turret">
-            <path d="M130 83 L141 57 L151 61 L145 89Z" fill="#475569" stroke="#cbd5e1" stroke-width="2"/>
-            <path d="M139 57 L151 49" stroke="#cbd5e1" stroke-width="5" stroke-linecap="round"/>
-            <circle cx="151" cy="49" r="29" fill="url(#gunBody3)" stroke="#e2e8f0" stroke-width="3"/>
-            <circle cx="151" cy="49" r="23" fill="url(#gunFanGlass3)" stroke="#0f172a" stroke-width="2"/>
-            <g class="gun-fan">
-              <path d="M151 49 C140 42 140 29 150 27 Q158 27 156 39Z" fill="#cbd5e1" stroke="#64748b"/>
-              <path d="M151 49 C158 38 171 39 173 49 Q173 57 161 55Z" fill="#cbd5e1" stroke="#64748b"/>
-              <path d="M151 49 C162 56 162 69 152 71 Q144 71 146 59Z" fill="#cbd5e1" stroke="#64748b"/>
-              <path d="M151 49 C144 60 131 59 129 49 Q129 41 141 43Z" fill="#cbd5e1" stroke="#64748b"/>
-              <circle cx="151" cy="49" r="6" fill="#38bdf8" stroke="#e0f2fe" stroke-width="2"/>
-            </g>
-            <circle cx="151" cy="49" r="25" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="2 4"/>
-            <path d="M171 35 L232 13 Q241 10 245 18 L248 27 Q250 34 241 37 L181 57Z" fill="url(#gunBarrel3)" stroke="#cbd5e1" stroke-width="2"/>
-            <path d="M230 14 L247 9 L255 29 L244 35Z" fill="#64748b" stroke="#e2e8f0" stroke-width="2"/>
-            <ellipse cx="249" cy="22" rx="5" ry="12" transform="rotate(-22 249 22)" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
-            <path d="M181 40 L231 22" stroke="#e2e8f0" stroke-width="2" opacity=".55"/>
-            <path d="M137 82 L163 67" stroke="#0f172a" stroke-width="7" stroke-linecap="round"/>
-            <path d="M140 79 L160 68" stroke="#facc15" stroke-width="3" stroke-linecap="round"/>
-          </g>
-          <g class="gun-snow">
-            <path class="snow-cloud" d="M250 16 Q266 3 278 16 Q292 12 298 26 Q290 39 275 34 Q262 43 250 31Z" fill="#fff" opacity=".88"/>
-            <g fill="#fff">
-              <circle class="flake" cx="258" cy="18" r="3"/><circle class="flake" cx="268" cy="10" r="2.5"/>
-              <circle class="flake" cx="279" cy="23" r="3"/><circle class="flake" cx="289" cy="17" r="2"/>
-              <circle class="flake" cx="270" cy="34" r="2.5"/><circle class="flake" cx="294" cy="34" r="2.5"/>
-              <circle class="flake" cx="261" cy="40" r="2"/><circle class="flake" cx="284" cy="43" r="2"/>
-            </g>
-          </g>
-          <text x="10" y="16" fill="#e2e8f0" font-size="10" font-weight="bold" font-family="Arial">FAN SNOW GUN 3</text>
-        </svg>
+  <defs>
+    <linearGradient id="trYellow3" x1="0" y1="0" x2="0.8" y2="1"><stop offset="0" stop-color="#ffe36b"/><stop offset=".48" stop-color="#f5b900"/><stop offset="1" stop-color="#bd7800"/></linearGradient>
+    <linearGradient id="trWhite3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#cbd5e1"/></linearGradient>
+    <linearGradient id="trSteel3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".5" stop-color="#64748b"/><stop offset="1" stop-color="#334155"/></linearGradient>
+    <radialGradient id="trFan3"><stop offset="0" stop-color="#475569"/><stop offset=".7" stop-color="#111827"/><stop offset="1" stop-color="#020617"/></radialGradient>
+  </defs>
+  <!-- alpine night background and snow-covered ground -->
+  <path d="M0 121 L34 112 66 118 102 110 142 118 185 111 225 117 260 110 300 116 V160 H0Z" fill="#eaf3fa"/>
+  <path d="M0 122 Q70 114 145 121 T300 118" fill="none" stroke="#fff" stroke-width="3"/>
+  <g opacity=".2" fill="#94a3b8"><circle cx="22" cy="139" r="2"/><circle cx="56" cy="129" r="1.8"/><circle cx="270" cy="138" r="2"/><circle cx="245" cy="128" r="1.5"/></g>
+  <!-- mobile steel carriage, axle and wheels -->
+  <path d="M84 112 H246 L263 122 H74Z" fill="url(#trSteel3)" stroke="#334155" stroke-width="2"/>
+  <path d="M98 108 L82 145 M237 108 L254 145" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+  <path d="M79 144 H91 M247 144 H261" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+  <g><circle cx="103" cy="125" r="13" fill="#111827" stroke="#cbd5e1" stroke-width="3"/><circle cx="103" cy="125" r="5" fill="#64748b" stroke="#e2e8f0" stroke-width="2"/><circle cx="231" cy="125" r="13" fill="#111827" stroke="#cbd5e1" stroke-width="3"/><circle cx="231" cy="125" r="5" fill="#64748b" stroke="#e2e8f0" stroke-width="2"/></g>
+  <!-- black power/control cabinet and support cradle -->
+  <path d="M127 91 L213 91 225 111 H119Z" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+  <rect x="145" y="91" width="51" height="28" rx="3" fill="#111827" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="151" y="96" width="22" height="10" rx="1" fill="#1e293b" stroke="#64748b"/>
+  <circle cx="181" cy="101" r="3" fill="#22c55e"/><circle cx="190" cy="101" r="3" fill="#f59e0b"/>
+  <path d="M133 91 L119 78 M205 91 L218 78" stroke="#64748b" stroke-width="7" stroke-linecap="round"/>
+  <path d="M130 87 L212 87" stroke="#cbd5e1" stroke-width="4"/>
+  <!-- yellow and white aerodynamic TR-series fan housing -->
+  <path d="M82 25 Q91 13 111 13 H225 Q245 13 258 30 L269 47 Q274 57 265 68 L246 87 Q237 96 216 96 H110 Q91 92 82 78Z" fill="url(#trYellow3)" stroke="#9a6700" stroke-width="2"/>
+  <path d="M160 18 H226 Q244 18 256 34 L263 45 H157Z" fill="#fff" opacity=".94"/>
+  <path d="M160 18 H226 Q244 18 256 34 L263 45" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+  <path d="M168 51 L245 51" stroke="#fff7cc" stroke-width="1.5" opacity=".55"/>
+  <path d="M188 62 L248 62" stroke="#9a6700" stroke-width="1" opacity=".4"/>
+  <text x="184" y="39" fill="#1f2937" font-size="8" font-weight="900" letter-spacing=".7" font-family="Arial">TECHNOALPIN</text>
+  <text x="220" y="77" fill="#fff7cc" font-size="11" font-weight="900" font-family="Arial">TR10</text>
+  <!-- black lower compressor / motor housing -->
+  <path d="M117 78 Q135 72 153 80 L169 94 H116Z" fill="#111827" stroke="#475569" stroke-width="2"/>
+  <path d="M126 82 L145 82 M128 86 L149 86" stroke="#64748b" stroke-width="2"/>
+  <!-- fan front ring and protective grille -->
+  <circle cx="84" cy="57" r="44" fill="url(#trWhite3)" stroke="#64748b" stroke-width="3"/>
+  <circle cx="84" cy="57" r="37" fill="#0b1220" stroke="#f8fafc" stroke-width="2"/>
+  <circle cx="84" cy="57" r="32" fill="url(#trFan3)" stroke="#475569" stroke-width="1.5"/>
+  <g class="gun-fan">
+    <path d="M84 57 C68 51 65 39 72 29 Q79 23 86 39Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <path d="M84 57 C90 41 102 38 111 46 Q115 54 99 60Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <path d="M84 57 C100 63 103 75 96 84 Q89 90 82 75Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <path d="M84 57 C78 73 66 76 57 68 Q53 60 69 54Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+    <circle cx="84" cy="57" r="6" fill="#cbd5e1" stroke="#111827" stroke-width="2"/>
+  </g>
+  <g fill="none" stroke="#94a3b8" stroke-width="1.5" opacity=".95">
+    <circle cx="84" cy="57" r="34"/>
+    <path d="M84 23 V91 M50 57 H118 M60 33 L108 81 M60 81 L108 33 M69 25 L99 89 M51 43 L117 71 M51 71 L117 43 M69 89 L99 25"/>
+  </g>
+  <circle cx="84" cy="57" r="41" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="2 5"/>
+  <!-- side nozzle / atomizer details -->
+  <g fill="#e2e8f0" stroke="#64748b" stroke-width="1"><circle cx="111" cy="26" r="2"/><circle cx="124" cy="22" r="2"/><circle cx="138" cy="20" r="2"/><circle cx="151" cy="20" r="2"/><circle cx="164" cy="20" r="2"/></g>
+  <!-- animated snow stream exits the fan face -->
+  <g class="gun-snow">
+    <path class="snow-cloud" d="M42 28 Q27 16 16 27 Q3 25 -2 40 Q2 55 16 51 Q27 64 42 51 Q52 42 42 28Z" fill="#fff" opacity=".9"/>
+    <g fill="#fff">
+      <circle class="flake" cx="43" cy="34" r="3"/><circle class="flake" cx="32" cy="25" r="2.5"/><circle class="flake" cx="21" cy="42" r="3"/>
+      <circle class="flake" cx="39" cy="54" r="2.4"/><circle class="flake" cx="12" cy="31" r="2"/><circle class="flake" cx="5" cy="48" r="2.5"/>
+      <circle class="flake" cx="29" cy="61" r="2"/><circle class="flake" cx="16" cy="58" r="1.8"/>
+    </g>
+  </g>
+  <text x="10" y="12" fill="#dbeafe" font-size="8" font-weight="bold" font-family="Arial">FAN SNOW GUN 3</text>
+</svg>
       </div>
       <label for="time3" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
       <input class="scada-time" type="datetime-local" id="time3" aria-label="Snow Gun 3 event time">
