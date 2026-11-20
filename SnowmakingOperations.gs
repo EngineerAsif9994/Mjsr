@@ -77,6 +77,19 @@ function doGet(e) {
   try {
     const sheet = getOpsSheet_();
     const state = buildOpsState_(sheet);
+    const lastRow = sheet.getLastRow();
+    const firstEventRow = Math.max(2, lastRow - 19);
+    const recentRows = lastRow >= 2
+      ? sheet.getRange(firstEventRow, 1, lastRow - firstEventRow + 1, OPS_HEADERS.length).getValues().reverse()
+      : [];
+    data.events = recentRows.map(row => ({
+      time: row[1] instanceof Date
+        ? Utilities.formatDate(row[1], Session.getScriptTimeZone(), 'dd MMM yyyy HH:mm')
+        : String(row[1] || ''),
+      equipment: String(row[2] || ''),
+      action: String(row[3] || '').toUpperCase(),
+      runtime: row[4] === '' ? '' : Number(row[4]) || 0
+    }));
     OPS_EQUIPMENT.forEach(name => {
       const s = state[name];
       data.equipment.push({
