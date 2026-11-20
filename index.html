@@ -18,10 +18,7 @@ body {
   font-family: Arial, sans-serif;
 }
 
-.container {
-  max-width: 1200px;
-  margin: auto;
-}
+.container { max-width: 1200px; margin: auto; }
 
 header {
   display: flex;
@@ -34,16 +31,11 @@ header {
 
 h1 { margin: 0; font-size: 27px; }
 .subtitle { color: #9caec4; margin-top: 7px; }
-
-.live {
-  color: #4ade80;
-  font-size: 13px;
-  font-weight: bold;
-}
+.live { color: #4ade80; font-size: 13px; font-weight: bold; }
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 15px;
   margin-bottom: 20px;
 }
@@ -61,12 +53,8 @@ h1 { margin: 0; font-size: 27px; }
   margin: 0 0 15px;
 }
 
-.value {
-  font-size: 34px;
-  font-weight: bold;
-}
-
-.unit { font-size: 17px; }
+.value { font-size: 32px; font-weight: bold; }
+.unit { font-size: 16px; }
 
 .status {
   margin-top: 12px;
@@ -77,6 +65,7 @@ h1 { margin: 0; font-size: 27px; }
 .good { color: #4ade80; }
 .cold { color: #facc15; }
 .error { color: #fb7185; }
+.neutral { color: #9caec4; }
 
 .panel { margin-bottom: 20px; }
 
@@ -85,10 +74,7 @@ h1 { margin: 0; font-size: 27px; }
   margin: 0 0 20px;
 }
 
-.chart-box {
-  height: 330px;
-}
-
+.chart-box { height: 330px; }
 .table-wrap { overflow-x: auto; }
 
 table {
@@ -116,7 +102,7 @@ footer {
 @media(max-width:600px) {
   body { padding: 12px; }
   h1 { font-size: 22px; }
-  .value { font-size: 29px; }
+  .value { font-size: 28px; }
   .chart-box { height: 270px; }
 }
 </style>
@@ -128,17 +114,20 @@ footer {
 <header>
   <div>
     <h1>MJSR Snowmaking Dashboard</h1>
-    <div class="subtitle">Malam Jabba Ski Resort | Weather Monitoring</div>
+    <div class="subtitle">
+      Malam Jabba Ski Resort | Snowmaking Operations Monitoring
+    </div>
   </div>
   <div class="live">● LIVE MONITORING</div>
 </header>
 
+<!-- LIVE WEATHER -->
 <div class="cards">
 
   <div class="card">
-    <h3>WET-BULB TEMPERATURE</h3>
+    <h3>CURRENT WET-BULB</h3>
     <div class="value" id="wb">-- <span class="unit">°C</span></div>
-    <div class="status" id="wbStatus">Waiting for data</div>
+    <div class="status neutral" id="wbStatus">Waiting for data</div>
   </div>
 
   <div class="card">
@@ -154,11 +143,59 @@ footer {
   <div class="card">
     <h3>SNOWMAKING TARGET</h3>
     <div class="value">-1.7 <span class="unit">°C</span></div>
-    <div class="status">Target wet-bulb temperature</div>
+    <div class="status neutral">Target wet-bulb temperature</div>
   </div>
 
 </div>
 
+<!-- NIGHTLY ANALYSIS -->
+<div class="panel">
+  <h2>Nightly Snowmaking Analysis</h2>
+  <div id="nightDate" class="subtitle" style="margin-bottom:18px">
+    Waiting for nightly data
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <h3>LOWEST WET-BULB</h3>
+      <div class="value" id="nightMin">--</div>
+      <div class="status neutral">Nightly minimum</div>
+    </div>
+
+    <div class="card">
+      <h3>HIGHEST WET-BULB</h3>
+      <div class="value" id="nightMax">--</div>
+      <div class="status neutral">Nightly maximum</div>
+    </div>
+
+    <div class="card">
+      <h3>SNOWMAKING HOURS</h3>
+      <div class="value" id="suitableHours">--</div>
+      <div class="status neutral">At or below -1.7°C</div>
+    </div>
+
+    <div class="card">
+      <h3>BEST SNOWMAKING PERIOD</h3>
+      <div class="value" id="bestPeriod" style="font-size:23px">--</div>
+      <div class="status neutral" id="bestDuration">Continuous suitable period</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CURRENT SUITABILITY -->
+<div class="panel">
+  <h2>Current Snowmaking Suitability</h2>
+  <div class="value" id="suitability" style="font-size:24px">
+    Waiting for data
+  </div>
+  <div class="subtitle" id="suitabilityDetail">
+    Latest wet-bulb conditions will appear here.
+  </div>
+</div>
+
+<!-- GRAPH -->
 <div class="panel">
   <h2>Wet-Bulb Temperature History</h2>
   <div class="chart-box">
@@ -166,6 +203,7 @@ footer {
   </div>
 </div>
 
+<!-- READINGS -->
 <div class="panel">
   <h2>Recent Weather Readings</h2>
   <div class="table-wrap">
@@ -226,6 +264,7 @@ function showWeatherData(data) {
 
   const latest = data.latest;
   const wb = Number(latest.wetBulb);
+  const threshold = Number(data.threshold);
 
   document.getElementById('wb').innerHTML =
     wb.toFixed(2) + ' <span class="unit">°C</span>';
@@ -238,16 +277,74 @@ function showWeatherData(data) {
     Number(latest.humidity).toFixed(0) +
     ' <span class="unit">%</span>';
 
+  const suitable = wb <= threshold;
   const status = document.getElementById('wbStatus');
 
-  if (wb <= data.threshold) {
-    status.textContent = 'Snowmaking target reached';
-    status.className = 'status cold';
+  status.textContent = suitable
+    ? 'Snowmaking target reached'
+    : 'Above snowmaking target';
+
+  status.className = suitable
+    ? 'status good'
+    : 'status error';
+
+  // Current suitability
+  const suitability = document.getElementById('suitability');
+
+  suitability.textContent = suitable
+    ? 'SUITABLE FOR SNOWMAKING'
+    : 'NOT SUITABLE FOR SNOWMAKING';
+
+  suitability.className = suitable
+    ? 'value good'
+    : 'value error';
+
+  document.getElementById('suitabilityDetail').textContent =
+    'Current wet-bulb: ' + wb.toFixed(2) +
+    '°C | Required: ' + threshold.toFixed(1) + '°C';
+
+  // Nightly analysis
+  const night = data.night;
+
+  if (night) {
+    document.getElementById('nightDate').textContent =
+      'Snowmaking night starting: ' + night.date +
+      ' | Readings analysed: ' + night.readings;
+
+    document.getElementById('nightMin').textContent =
+      Number(night.minimumWetBulb).toFixed(2) + '°C';
+
+    document.getElementById('nightMax').textContent =
+      Number(night.maximumWetBulb).toFixed(2) + '°C';
+
+    document.getElementById('suitableHours').textContent =
+      Number(night.suitableHours).toFixed(2) + ' hrs';
+
+    if (night.bestPeriod) {
+      document.getElementById('bestPeriod').textContent =
+        night.bestPeriod.start + ' – ' + night.bestPeriod.end;
+
+      document.getElementById('bestDuration').textContent =
+        night.bestPeriod.hours.toFixed(2) +
+        ' continuous suitable hours';
+    } else {
+      document.getElementById('bestPeriod').textContent =
+        'No suitable period';
+
+      document.getElementById('bestDuration').textContent =
+        'Target conditions not recorded';
+    }
   } else {
-    status.textContent = 'Above snowmaking target';
-    status.className = 'status good';
+    document.getElementById('nightDate').textContent =
+      'No nightly analysis available';
+
+    ['nightMin','nightMax','suitableHours','bestPeriod']
+      .forEach(function(id) {
+        document.getElementById(id).textContent = '--';
+      });
   }
 
+  // Recent readings
   const recent = data.rows.slice(-30).reverse();
 
   document.getElementById('readings').innerHTML =
