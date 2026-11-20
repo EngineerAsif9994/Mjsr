@@ -106,7 +106,7 @@ footer {
   .chart-box { height: 270px; }
 }
 
-/* SCADA OPERATIONS PANEL */
+/* SNOWMAKING OPERATIONS PANEL */
 .scada-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:15px; }
 .scada-unit { background:#111c2c; border:1px solid #344258; border-radius:12px; padding:17px; }
 .scada-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px; }
@@ -219,9 +219,9 @@ footer {
 </div>
 
 
-<!-- SCADA SNOWMAKING OPERATIONS -->
+<!-- SNOWMAKING OPERATIONS -->
 <div class="panel" id="operationsPanel">
-  <h2>Snowmaking Operations | SCADA Control Desk</h2>
+  <h2>Snowmaking Operations | Control Desk</h2>
   <div class="subtitle" style="margin:-8px 0 16px">Manual event logging • Four independent equipment stations</div>
   <div class="scada-grid" id="scadaGrid">
     
@@ -534,7 +534,7 @@ function drawChart(rows) {
 }
 
 
-/* SCADA EVENT LOGGER
+/* SNOWMAKING EVENT LOGGER
    Set this to the deployed URL of the separate Snowmaking Operations Apps Script. */
 const OPS_URL = 'https://script.google.com/macros/s/AKfycbylrKIm_wx38K_Eu_-Q_H5sr_VaxfuJHCjZ9Ss7-PgOBsqAcUclP60B-UOjDKocOPl-Pw/exec';
 const EQUIPMENT = ['Pump House','Snow Gun 1','Snow Gun 2','Snow Gun 3'];
@@ -553,7 +553,7 @@ function recordOperation(index, action) {
   if (action === 'START' && state === 'RUNNING') { setOpsMessage(EQUIPMENT[index] + ' is already RUNNING.','error'); return; }
   if (action === 'STOP' && state !== 'RUNNING') { setOpsMessage(EQUIPMENT[index] + ' is not RUNNING. STOP was not recorded.','error'); return; }
   if (!OPS_URL || OPS_URL.indexOf('PASTE_') === 0) {
-    setOpsMessage('The SCADA panel is ready, but the separate Google Sheets logging endpoint has not been deployed. No event was saved.','error');
+    setOpsMessage('The operations panel is ready, but the separate Google Sheets logging endpoint has not been deployed. No event was saved.','error');
     return;
   }
   const form = document.createElement('form');
