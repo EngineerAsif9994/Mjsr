@@ -8,6 +8,16 @@ const OPS_SHEET_NAME = 'Snowmaking Operations';
 const OPS_EQUIPMENT = ['Pump House', 'Snow Gun 1', 'Snow Gun 2', 'Snow Gun 3'];
 const OPS_HEADERS = ['Recorded At (PKT)', 'Event Time (PKT)', 'Equipment', 'Action', 'Runtime Hours'];
 
+
+/** Allow only the Google account explicitly configured in Script Properties. */
+function assertOpsAuthorized_() {
+  const allowed = String(PropertiesService.getScriptProperties().getProperty('ALLOWED_EMAIL') || '').trim().toLowerCase();
+  const active = String(Session.getActiveUser().getEmail() || '').trim().toLowerCase();
+  if (!allowed || !active || active !== allowed) {
+    throw new Error('Unauthorized. Configure ALLOWED_EMAIL and deploy to execute as the accessing user.');
+  }
+}
+
 function getOpsSheet_() {
   const ss = SpreadsheetApp.openById(OPS_SPREADSHEET_ID);
   let sheet = ss.getSheetByName(OPS_SHEET_NAME);
@@ -22,6 +32,7 @@ function getOpsSheet_() {
 
 function doPost(e) {
   try {
+    assertOpsAuthorized_();
     const p = (e && e.parameter) || {};
     const equipment = String(p.equipment || '');
     const action = String(p.action || '').toUpperCase();
@@ -57,6 +68,9 @@ function doPost(e) {
 }
 
 function doGet(e) {
+  try { assertOpsAuthorized_(); } catch (authErr) {
+    return ContentService.createTextOutput('/* Unauthorized operations logger request */');
+  }
   const p = (e && e.parameter) || {};
   if (p.action !== 'state') return ContentService.createTextOutput('MJSR Snowmaking Operations Logger');
   const data = { equipment: [] };
