@@ -105,6 +105,29 @@ footer {
   .value { font-size: 28px; }
   .chart-box { height: 270px; }
 }
+
+/* SCADA OPERATIONS PANEL */
+.scada-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:15px; }
+.scada-unit { background:#111c2c; border:1px solid #344258; border-radius:12px; padding:17px; }
+.scada-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px; }
+.scada-name { font-weight:bold; font-size:16px; }
+.scada-state { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:bold; letter-spacing:.5px; }
+.scada-lamp { width:11px; height:11px; border-radius:50%; background:#64748b; box-shadow:0 0 8px currentColor; }
+.scada-state.running { color:#4ade80; } .scada-state.running .scada-lamp { background:#4ade80; }
+.scada-state.stopped { color:#94a3b8; } .scada-state.stopped .scada-lamp { background:#64748b; }
+.scada-state.fault { color:#fb7185; } .scada-state.fault .scada-lamp { background:#fb7185; }
+.scada-time { width:100%; background:#0b1422; color:#fff; border:1px solid #40516a; border-radius:7px; padding:10px; margin:5px 0 12px; color-scheme:dark; }
+.scada-actions { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.scada-btn { border:0; border-radius:7px; padding:12px 8px; color:#fff; font-weight:bold; cursor:pointer; letter-spacing:.4px; }
+.scada-start { background:#15803d; } .scada-stop { background:#b91c1c; }
+.scada-btn:disabled { opacity:.35; cursor:not-allowed; }
+.scada-meta { margin-top:13px; padding-top:10px; border-top:1px solid #344258; color:#aab7ca; font-size:12px; line-height:1.8; }
+.scada-meta strong { color:#e2e8f0; }
+.scada-note { color:#94a3b8; font-size:12px; margin-top:12px; }
+.scada-total { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:15px; }
+.scada-total .card { padding:13px; }
+.scada-total .value { font-size:22px; }
+
 </style>
 </head>
 
@@ -193,6 +216,89 @@ footer {
   <div class="subtitle" id="suitabilityDetail">
     Latest wet-bulb conditions will appear here.
   </div>
+</div>
+
+
+<!-- SCADA SNOWMAKING OPERATIONS -->
+<div class="panel" id="operationsPanel">
+  <h2>Snowmaking Operations | SCADA Control Desk</h2>
+  <div class="subtitle" style="margin:-8px 0 16px">Manual event logging • Four independent equipment stations</div>
+  <div class="scada-grid" id="scadaGrid">
+    
+    <section class="scada-unit" data-unit="0">
+      <div class="scada-head">
+        <div class="scada-name">Pump House</div>
+        <div class="scada-state stopped" id="state0"><span class="scada-lamp"></span><span>STOPPED</span></div>
+      </div>
+      <label for="time0" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
+      <input class="scada-time" type="time" id="time0" aria-label="Pump House event time">
+      <div class="scada-actions">
+        <button class="scada-btn scada-start" id="start0" onclick="recordOperation(0,'START')">▶ START</button>
+        <button class="scada-btn scada-stop" id="stop0" onclick="recordOperation(0,'STOP')">■ STOP</button>
+      </div>
+      <div class="scada-meta">
+        Last START: <strong id="lastStart0">—</strong><br>
+        Last STOP: <strong id="lastStop0">—</strong><br>
+        Tonight runtime: <strong id="tonight0">0.00 h</strong><br>
+        Seasonal runtime: <strong id="season0">0.00 h</strong>
+      </div>
+    </section>
+    <section class="scada-unit" data-unit="1">
+      <div class="scada-head">
+        <div class="scada-name">Snow Gun 1</div>
+        <div class="scada-state stopped" id="state1"><span class="scada-lamp"></span><span>STOPPED</span></div>
+      </div>
+      <label for="time1" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
+      <input class="scada-time" type="time" id="time1" aria-label="Snow Gun 1 event time">
+      <div class="scada-actions">
+        <button class="scada-btn scada-start" id="start1" onclick="recordOperation(1,'START')">▶ START</button>
+        <button class="scada-btn scada-stop" id="stop1" onclick="recordOperation(1,'STOP')">■ STOP</button>
+      </div>
+      <div class="scada-meta">
+        Last START: <strong id="lastStart1">—</strong><br>
+        Last STOP: <strong id="lastStop1">—</strong><br>
+        Tonight runtime: <strong id="tonight1">0.00 h</strong><br>
+        Seasonal runtime: <strong id="season1">0.00 h</strong>
+      </div>
+    </section>
+    <section class="scada-unit" data-unit="2">
+      <div class="scada-head">
+        <div class="scada-name">Snow Gun 2</div>
+        <div class="scada-state stopped" id="state2"><span class="scada-lamp"></span><span>STOPPED</span></div>
+      </div>
+      <label for="time2" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
+      <input class="scada-time" type="time" id="time2" aria-label="Snow Gun 2 event time">
+      <div class="scada-actions">
+        <button class="scada-btn scada-start" id="start2" onclick="recordOperation(2,'START')">▶ START</button>
+        <button class="scada-btn scada-stop" id="stop2" onclick="recordOperation(2,'STOP')">■ STOP</button>
+      </div>
+      <div class="scada-meta">
+        Last START: <strong id="lastStart2">—</strong><br>
+        Last STOP: <strong id="lastStop2">—</strong><br>
+        Tonight runtime: <strong id="tonight2">0.00 h</strong><br>
+        Seasonal runtime: <strong id="season2">0.00 h</strong>
+      </div>
+    </section>
+    <section class="scada-unit" data-unit="3">
+      <div class="scada-head">
+        <div class="scada-name">Snow Gun 3</div>
+        <div class="scada-state stopped" id="state3"><span class="scada-lamp"></span><span>STOPPED</span></div>
+      </div>
+      <label for="time3" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
+      <input class="scada-time" type="time" id="time3" aria-label="Snow Gun 3 event time">
+      <div class="scada-actions">
+        <button class="scada-btn scada-start" id="start3" onclick="recordOperation(3,'START')">▶ START</button>
+        <button class="scada-btn scada-stop" id="stop3" onclick="recordOperation(3,'STOP')">■ STOP</button>
+      </div>
+      <div class="scada-meta">
+        Last START: <strong id="lastStart3">—</strong><br>
+        Last STOP: <strong id="lastStop3">—</strong><br>
+        Tonight runtime: <strong id="tonight3">0.00 h</strong><br>
+        Seasonal runtime: <strong id="season3">0.00 h</strong>
+      </div>
+    </section>
+  </div>
+  <div class="scada-note" id="opsMessage">Operations logger not yet connected. Configure the separate logging endpoint before recording real events.</div>
 </div>
 
 <!-- GRAPH -->
@@ -426,6 +532,90 @@ function drawChart(rows) {
     }
   });
 }
+
+
+/* SCADA EVENT LOGGER
+   Set this to the deployed URL of the separate Snowmaking Operations Apps Script. */
+const OPS_URL = 'PASTE_SNOWMAKING_OPERATIONS_WEB_APP_URL_HERE';
+const EQUIPMENT = ['Pump House','Snow Gun 1','Snow Gun 2','Snow Gun 3'];
+const opsState = EQUIPMENT.map(() => ({status:'STOPPED',lastStart:'—',lastStop:'—',tonight:0,season:0}));
+
+function setDefaultOperationTimes() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  document.querySelectorAll('.scada-time').forEach(el => { if (!el.value) el.value = hh + ':' + mm; });
+}
+
+function recordOperation(index, action) {
+  const time = document.getElementById('time' + index).value;
+  const state = opsState[index].status;
+  if (!time) { setOpsMessage('Enter the event time first.','error'); return; }
+  if (action === 'START' && state === 'RUNNING') { setOpsMessage(EQUIPMENT[index] + ' is already RUNNING.','error'); return; }
+  if (action === 'STOP' && state !== 'RUNNING') { setOpsMessage(EQUIPMENT[index] + ' is not RUNNING. STOP was not recorded.','error'); return; }
+  if (!OPS_URL || OPS_URL.indexOf('PASTE_') === 0) {
+    setOpsMessage('The SCADA panel is ready, but the separate Google Sheets logging endpoint has not been deployed. No event was saved.','error');
+    return;
+  }
+  const form = document.createElement('form');
+  form.method = 'POST'; form.action = OPS_URL; form.target = 'opsSubmitFrame';
+  const values = {action:action,equipment:EQUIPMENT[index],enteredTime:time,clientTimestamp:new Date().toISOString()};
+  Object.keys(values).forEach(key => {
+    const input = document.createElement('input'); input.type='hidden'; input.name=key; input.value=values[key]; form.appendChild(input);
+  });
+  document.body.appendChild(form); form.submit(); form.remove();
+  opsState[index].status = action === 'START' ? 'RUNNING' : 'STOPPED';
+  renderOperation(index);
+  setOpsMessage(action + ' submitted for ' + EQUIPMENT[index] + ' at ' + time + '. Refreshing saved state shortly.','good');
+  window.setTimeout(loadOperationsState,1800);
+}
+
+function renderOperation(i) {
+  const s = opsState[i];
+  const el = document.getElementById('state'+i);
+  el.className = 'scada-state ' + (s.status === 'RUNNING' ? 'running' : s.status === 'FAULT' ? 'fault' : 'stopped');
+  el.lastElementChild.textContent = s.status;
+  document.getElementById('start'+i).disabled = s.status === 'RUNNING';
+  document.getElementById('stop'+i).disabled = s.status !== 'RUNNING';
+  document.getElementById('lastStart'+i).textContent = s.lastStart;
+  document.getElementById('lastStop'+i).textContent = s.lastStop;
+  document.getElementById('tonight'+i).textContent = Number(s.tonight || 0).toFixed(2) + ' h';
+  document.getElementById('season'+i).textContent = Number(s.season || 0).toFixed(2) + ' h';
+}
+
+function setOpsMessage(message,kind) {
+  const el = document.getElementById('opsMessage');
+  el.textContent = message;
+  el.style.color = kind === 'error' ? '#fb7185' : kind === 'good' ? '#4ade80' : '#94a3b8';
+}
+
+function receiveOperationsState(data) {
+  if (!data || !Array.isArray(data.equipment)) return;
+  data.equipment.forEach((item,i) => {
+    if (i >= opsState.length) return;
+    opsState[i] = Object.assign(opsState[i],item);
+    renderOperation(i);
+  });
+  setOpsMessage('Google Sheets operations log connected.','good');
+}
+
+function loadOperationsState() {
+  if (!OPS_URL || OPS_URL.indexOf('PASTE_') === 0) return;
+  const old = document.getElementById('opsStateScript'); if (old) old.remove();
+  const script = document.createElement('script'); script.id='opsStateScript';
+  script.onerror = () => setOpsMessage('Could not read operations status from Google Sheets.','error');
+  script.src = OPS_URL + '?action=state&callback=receiveOperationsState&_=' + Date.now();
+  document.body.appendChild(script);
+}
+
+window.addEventListener('load',() => {
+  setDefaultOperationTimes();
+  EQUIPMENT.forEach((_,i) => renderOperation(i));
+  const frame = document.createElement('iframe'); frame.name='opsSubmitFrame'; frame.style.display='none'; frame.id='opsSubmitFrame'; document.body.appendChild(frame);
+  loadOperationsState();
+  window.setInterval(loadOperationsState,30000);
+});
+
 
 loadWeather();
 setInterval(loadWeather, 60000);
