@@ -142,10 +142,13 @@ footer {
 @keyframes gun-sweep { from { transform:rotate(-7deg); } to { transform:rotate(7deg); } }
 @keyframes fan-spin { to { transform:rotate(360deg); } }
 @keyframes snow-blast { from { transform:translate(0,0) scale(.65); opacity:.95; } to { transform:translate(72px,30px) scale(1.35); opacity:0; } }
-.pump-scene.active .pump-rotor { transform-box:fill-box; transform-origin:center; animation:fan-spin .7s linear infinite; }
-.pump-scene.active .pump-water { stroke-dasharray:9 7; animation:pump-water-flow .55s linear infinite; }
-.pump-scene.active .pump-flow { animation:pump-flow-move .9s ease-in-out infinite alternate; }
+.pump-scene.active .pump-rotor { transform-box:fill-box; transform-origin:50% 50%; animation:pump-rotate .42s linear infinite !important; }
+.pump-scene.active .pump-water { stroke:#38bdf8; stroke-width:7; stroke-dasharray:7 5; animation:pump-water-flow .42s linear infinite; filter:drop-shadow(0 0 3px #38bdf8); }
+.pump-scene.active .pump-flow { animation:pump-flow-move .55s ease-in-out infinite alternate; }
+.pump-scene.active { border:2px solid #22c55e; box-shadow:0 0 14px rgba(34,197,94,.45); }
+.pump-scene.active::after { content:"PUMP RUNNING  •  MOTOR ROTATING  •  WATER FLOWING"; position:absolute; left:7px; right:7px; bottom:6px; padding:5px 3px; border-radius:5px; background:rgba(5,46,22,.92); color:#86efac; font-size:10px; font-weight:800; text-align:center; letter-spacing:.35px; }
 .pump-flow { transform-box:fill-box; transform-origin:center; }
+@keyframes pump-rotate { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
 @keyframes pump-water-flow { to { stroke-dashoffset:-32; } }
 @keyframes pump-flow-move { from { transform:translateX(-5px); opacity:.45; } to { transform:translateX(8px); opacity:1; } }
 .ops-history-wrap { overflow-x:auto; }
@@ -271,9 +274,10 @@ footer {
           <g class="pump-motor">
             <rect x="86" y="53" width="65" height="42" rx="7" fill="url(#pumpMetal)" stroke="#dbeafe" stroke-width="2"/>
             <path d="M96 54 V94 M105 54 V94 M114 54 V94 M123 54 V94 M132 54 V94" stroke="#1e293b" stroke-width="3"/>
-            <circle cx="119" cy="74" r="13" fill="#0f172a" stroke="#cbd5e1" stroke-width="3"/>
+            <circle cx="119" cy="74" r="19" fill="#071827" stroke="#e0f2fe" stroke-width="3"/>
             <g class="pump-rotor">
-              <path d="M119 63 Q132 68 121 74 Q119 75 119 74Z M130 76 Q122 88 119 76 Q119 74 119 74Z M116 86 Q105 78 117 74 Q119 74 119 74Z M108 70 Q115 59 119 72 Q119 74 119 74Z" fill="#38bdf8"/>
+              <path d="M119 57 C132 58 132 67 123 72 L119 74Z M136 74 C135 87 126 87 121 78 L119 74Z M119 91 C106 90 106 81 115 76 L119 74Z M102 74 C103 61 112 61 117 70 L119 74Z" fill="#facc15" stroke="#fff7ae" stroke-width="1.5"/>
+              <circle cx="119" cy="74" r="5" fill="#f8fafc" stroke="#0f172a" stroke-width="2"/>
             </g>
             <rect x="78" y="95" width="82" height="7" rx="3" fill="#64748b"/>
             <path d="M151 63 H179 Q190 63 190 75 V82 H244" fill="none" stroke="#94a3b8" stroke-width="13" stroke-linejoin="round"/>
