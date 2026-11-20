@@ -254,6 +254,33 @@ footer {
         <div class="scada-name">Pump House</div>
         <div class="scada-state stopped" id="state0"><span class="scada-lamp"></span><span>STOPPED</span></div>
       </div>
+      <div class="gun-scene pump-scene" id="gunScene0" role="img" aria-label="Pump house stopped">
+        <svg viewBox="0 0 300 132" aria-hidden="true">
+          <defs>
+            <linearGradient id="pumpMetal" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#94a3b8"/><stop offset="1" stop-color="#334155"/></linearGradient>
+          </defs>
+          <path d="M0 105 H300 V132 H0Z" fill="#a9bfd0"/>
+          <path d="M24 24 V92 H56 V106 H18 V24Z M244 18 V94 H276 V106 H238 V18Z" fill="#64748b" stroke="#cbd5e1" stroke-width="2"/>
+          <path d="M24 24 H66 V36 H36 V92 H24Z M244 18 H286 V30 H256 V94 H244Z" fill="#38bdf8" opacity=".35"/>
+          <g class="pump-motor">
+            <rect x="86" y="53" width="65" height="42" rx="7" fill="url(#pumpMetal)" stroke="#dbeafe" stroke-width="2"/>
+            <path d="M96 54 V94 M105 54 V94 M114 54 V94 M123 54 V94 M132 54 V94" stroke="#1e293b" stroke-width="3"/>
+            <circle cx="119" cy="74" r="13" fill="#0f172a" stroke="#cbd5e1" stroke-width="3"/>
+            <g class="pump-rotor">
+              <path d="M119 63 Q132 68 121 74 Q119 75 119 74Z M130 76 Q122 88 119 76 Q119 74 119 74Z M116 86 Q105 78 117 74 Q119 74 119 74Z M108 70 Q115 59 119 72 Q119 74 119 74Z" fill="#38bdf8"/>
+            </g>
+            <rect x="78" y="95" width="82" height="7" rx="3" fill="#64748b"/>
+            <path d="M151 63 H179 Q190 63 190 75 V82 H244" fill="none" stroke="#94a3b8" stroke-width="13" stroke-linejoin="round"/>
+            <path d="M151 63 H179 Q190 63 190 75 V82 H244" fill="none" stroke="#0ea5e9" stroke-width="5" stroke-linejoin="round" class="pump-water"/>
+            <path d="M24 75 H64 Q74 75 74 85 V89 H86" fill="none" stroke="#94a3b8" stroke-width="13" stroke-linejoin="round"/>
+            <path d="M24 75 H64 Q74 75 74 85 V89 H86" fill="none" stroke="#0ea5e9" stroke-width="5" stroke-linejoin="round" class="pump-water"/>
+          </g>
+          <g class="pump-flow" fill="#7dd3fc">
+            <path d="M195 76 l8 -5 v10z"/><path d="M218 76 l8 -5 v10z"/><path d="M49 69 l8 -5 v10z"/>
+          </g>
+          <text x="12" y="15" fill="#dbeafe" font-size="10" font-family="Arial">PUMP HOUSE</text>
+        </svg>
+      </div>
       <label for="time0" style="font-size:12px;color:#aab7ca">ENTER EVENT TIME</label>
       <input class="scada-time" type="datetime-local" id="time0" aria-label="Pump House event time">
       <div class="scada-actions">
