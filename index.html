@@ -1,15 +1,338 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycbweKTSuC1Bx4ruiO0WKR38y46KwFyCkKCUynFntkF_iIr7iNRZpPbvpXnUgX8Hs2Bgn3Q/exec">
-  <title>MJSR Snowmaking Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MJSR | Snowmaking Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: #101827;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+h1 { margin: 0; font-size: 27px; }
+.subtitle { color: #9caec4; margin-top: 7px; }
+
+.live {
+  color: #4ade80;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card, .panel {
+  background: #1d2a3d;
+  border: 1px solid #293a52;
+  border-radius: 13px;
+  padding: 20px;
+}
+
+.card h3 {
+  color: #aab7ca;
+  font-size: 13px;
+  margin: 0 0 15px;
+}
+
+.value {
+  font-size: 34px;
+  font-weight: bold;
+}
+
+.unit { font-size: 17px; }
+
+.status {
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.good { color: #4ade80; }
+.cold { color: #facc15; }
+.error { color: #fb7185; }
+
+.panel { margin-bottom: 20px; }
+
+.panel h2 {
+  font-size: 18px;
+  margin: 0 0 20px;
+}
+
+.chart-box {
+  height: 330px;
+}
+
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 550px;
+}
+
+th, td {
+  padding: 13px 10px;
+  border-bottom: 1px solid #344258;
+  text-align: left;
+  font-size: 13px;
+}
+
+th { color: #aab7ca; }
+
+footer {
+  color: #8192a9;
+  font-size: 12px;
+  text-align: center;
+  padding: 15px;
+}
+
+@media(max-width:600px) {
+  body { padding: 12px; }
+  h1 { font-size: 22px; }
+  .value { font-size: 29px; }
+  .chart-box { height: 270px; }
+}
+</style>
 </head>
+
 <body>
-  <p>Opening MJSR Snowmaking Dashboard...</p>
-  <script>
-    window.location.replace("https://script.google.com/macros/s/AKfycbweKTSuC1Bx4ruiO0WKR38y46KwFyCkKCUynFntkF_iIr7iNRZpPbvpXnUgX8Hs2Bgn3Q/exec");
-  </script>
+<div class="container">
+
+<header>
+  <div>
+    <h1>MJSR Snowmaking Dashboard</h1>
+    <div class="subtitle">Malam Jabba Ski Resort | Weather Monitoring</div>
+  </div>
+  <div class="live">● LIVE MONITORING</div>
+</header>
+
+<div class="cards">
+
+  <div class="card">
+    <h3>WET-BULB TEMPERATURE</h3>
+    <div class="value" id="wb">-- <span class="unit">°C</span></div>
+    <div class="status" id="wbStatus">Waiting for data</div>
+  </div>
+
+  <div class="card">
+    <h3>OUTDOOR TEMPERATURE</h3>
+    <div class="value" id="temp">-- <span class="unit">°C</span></div>
+  </div>
+
+  <div class="card">
+    <h3>OUTDOOR HUMIDITY</h3>
+    <div class="value" id="rh">-- <span class="unit">%</span></div>
+  </div>
+
+  <div class="card">
+    <h3>SNOWMAKING TARGET</h3>
+    <div class="value">-1.7 <span class="unit">°C</span></div>
+    <div class="status">Target wet-bulb temperature</div>
+  </div>
+
+</div>
+
+<div class="panel">
+  <h2>Wet-Bulb Temperature History</h2>
+  <div class="chart-box">
+    <canvas id="chart"></canvas>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Recent Weather Readings</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Temperature</th>
+          <th>Humidity</th>
+          <th>Wet Bulb</th>
+        </tr>
+      </thead>
+      <tbody id="readings">
+        <tr><td colspan="5">Loading weather readings...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  MJSR Snowmaking Operations | Automatic refresh every 60 seconds
+  <div id="updated">Connecting...</div>
+</footer>
+
+</div>
+
+<script>
+const DATA_URL =
+'https://script.google.com/macros/s/AKfycbyGWlhgWJZbeP3sxbYtecDIIUSqfOd_k5olQDRoSFnQ35p1tJsKeJNUAl1tiv4_Virq8Q/exec';
+
+let chart = null;
+
+function loadWeather() {
+  const old = document.getElementById('weatherScript');
+  if (old) old.remove();
+
+  const script = document.createElement('script');
+  script.id = 'weatherScript';
+
+  script.onerror = function() {
+    document.getElementById('wbStatus').textContent =
+      'Connection error - retrying';
+    document.getElementById('wbStatus').className =
+      'status error';
+  };
+
+  script.src = DATA_URL + '?data=1&_=' + Date.now();
+  document.body.appendChild(script);
+}
+
+function showWeatherData(data) {
+  if (!data || !data.latest) {
+    document.getElementById('wbStatus').textContent =
+      'No readings available';
+    return;
+  }
+
+  const latest = data.latest;
+  const wb = Number(latest.wetBulb);
+
+  document.getElementById('wb').innerHTML =
+    wb.toFixed(2) + ' <span class="unit">°C</span>';
+
+  document.getElementById('temp').innerHTML =
+    Number(latest.temperature).toFixed(1) +
+    ' <span class="unit">°C</span>';
+
+  document.getElementById('rh').innerHTML =
+    Number(latest.humidity).toFixed(0) +
+    ' <span class="unit">%</span>';
+
+  const status = document.getElementById('wbStatus');
+
+  if (wb <= data.threshold) {
+    status.textContent = 'Snowmaking target reached';
+    status.className = 'status cold';
+  } else {
+    status.textContent = 'Above snowmaking target';
+    status.className = 'status good';
+  }
+
+  const recent = data.rows.slice(-30).reverse();
+
+  document.getElementById('readings').innerHTML =
+    recent.map(function(r) {
+      return '<tr>' +
+        '<td>' + escapeHTML(r.date) + '</td>' +
+        '<td>' + escapeHTML(r.time) + '</td>' +
+        '<td>' + Number(r.temperature).toFixed(1) + ' °C</td>' +
+        '<td>' + Number(r.humidity).toFixed(0) + ' %</td>' +
+        '<td><strong>' + Number(r.wetBulb).toFixed(2) + ' °C</strong></td>' +
+        '</tr>';
+    }).join('');
+
+  drawChart(data.rows);
+
+  document.getElementById('updated').textContent =
+    'Last updated: ' + new Date().toLocaleString();
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, function(c) {
+    return {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[c];
+  });
+}
+
+function drawChart(rows) {
+  const data = rows.slice(-100);
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(document.getElementById('chart'), {
+    type: 'line',
+    data: {
+      labels: data.map(r => r.date + ' ' + r.time),
+      datasets: [{
+        label: 'Wet Bulb °C',
+        data: data.map(r => Number(r.wetBulb)),
+        borderColor: '#38bdf8',
+        backgroundColor: 'rgba(56,189,248,0.12)',
+        fill: true,
+        tension: 0.25,
+        pointRadius: 2
+      }, {
+        label: 'Snowmaking Target -1.7°C',
+        data: data.map(() => -1.7),
+        borderColor: '#facc15',
+        borderDash: [6, 5],
+        pointRadius: 0,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          ticks: {
+            color: '#aab7ca',
+            maxTicksLimit: 8
+          },
+          grid: { color: '#344258' }
+        },
+        y: {
+          ticks: { color: '#aab7ca' },
+          grid: { color: '#344258' }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: { color: '#ffffff' }
+        }
+      }
+    }
+  });
+}
+
+loadWeather();
+setInterval(loadWeather, 60000);
+</script>
+
 </body>
 </html>
