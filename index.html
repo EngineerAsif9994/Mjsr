@@ -223,6 +223,10 @@ footer {
 <div class="panel" id="operationsPanel">
   <h2>Snowmaking Operations | Control Desk</h2>
   <div class="subtitle" style="margin:-8px 0 16px">Manual event logging • Four independent equipment stations</div>
+  <div style="display:flex;gap:9px;flex-wrap:wrap;margin:0 0 16px;align-items:center">
+    <input id="opsAccessCode" type="password" autocomplete="current-password" placeholder="Enter authorised team access code" style="background:#0b1422;color:#fff;border:1px solid #40516a;border-radius:7px;padding:11px;min-width:240px">
+    <button type="button" class="scada-btn" style="background:#2563eb" onclick="unlockOperations()">UNLOCK OPERATIONS</button>
+  </div>
   <div class="scada-grid" id="scadaGrid">
     
     <section class="scada-unit" data-unit="0">
@@ -539,6 +543,18 @@ function drawChart(rows) {
 const OPS_URL = 'https://script.google.com/macros/s/AKfycbylrKIm_wx38K_Eu_-Q_H5sr_VaxfuJHCjZ9Ss7-PgOBsqAcUclP60B-UOjDKocOPl-Pw/exec';
 const EQUIPMENT = ['Pump House','Snow Gun 1','Snow Gun 2','Snow Gun 3'];
 const opsState = EQUIPMENT.map(() => ({status:'STOPPED',lastStart:'—',lastStop:'—',tonight:0,season:0}));
+let opsUnlocked = false;
+let opsStateTimeout = null;
+let pendingOperation = null;
+function getOpsAccessCode() { return sessionStorage.getItem('mjsrOpsAccessCode') || ''; }
+function unlockOperations() {
+  const code = document.getElementById('opsAccessCode').value.trim();
+  if (!code) { setOpsMessage('Enter the team access code first.','error'); return; }
+  sessionStorage.setItem('mjsrOpsAccessCode',code);
+  opsUnlocked = true;
+  setOpsMessage('Checking team access code…','neutral');
+  loadOperationsState();
+}
 
 function setDefaultOperationTimes() {
   const now = new Date();
@@ -549,6 +565,7 @@ function setDefaultOperationTimes() {
 function recordOperation(index, action) {
   const time = document.getElementById('time' + index).value;
   const state = opsState[index].status;
+  if (!opsUnlocked || !getOpsAccessCode()) { setOpsMessage('Unlock the operations panel with your team access code first.','error'); return; }
   if (!time) { setOpsMessage('Enter the event time first.','error'); return; }
   if (action === 'START' && state === 'RUNNING') { setOpsMessage(EQUIPMENT[index] + ' is already RUNNING.','error'); return; }
   if (action === 'STOP' && state !== 'RUNNING') { setOpsMessage(EQUIPMENT[index] + ' is not RUNNING. STOP was not recorded.','error'); return; }
@@ -558,14 +575,13 @@ function recordOperation(index, action) {
   }
   const form = document.createElement('form');
   form.method = 'POST'; form.action = OPS_URL; form.target = 'opsSubmitFrame';
-  const values = {action:action,equipment:EQUIPMENT[index],enteredAt:time,clientTimestamp:new Date().toISOString()};
+  const values = {action:action,equipment:EQUIPMENT[index],enteredAt:time,clientTimestamp:new Date().toISOString(),accessCode:getOpsAccessCode()};
   Object.keys(values).forEach(key => {
     const input = document.createElement('input'); input.type='hidden'; input.name=key; input.value=values[key]; form.appendChild(input);
   });
   document.body.appendChild(form); form.submit(); form.remove();
-  opsState[index].status = action === 'START' ? 'RUNNING' : 'STOPPED';
-  renderOperation(index);
-  setOpsMessage(action + ' submitted for ' + EQUIPMENT[index] + ' at ' + time + '. Refreshing saved state shortly.','good');
+  pendingOperation = {index:index,action:action};
+  setOpsMessage(action + ' sent for ' + EQUIPMENT[index] + '. Verifying that Google Sheets saved it…','neutral');
   window.setTimeout(loadOperationsState,1800);
 }
 
@@ -574,8 +590,8 @@ function renderOperation(i) {
   const el = document.getElementById('state'+i);
   el.className = 'scada-state ' + (s.status === 'RUNNING' ? 'running' : s.status === 'FAULT' ? 'fault' : 'stopped');
   el.lastElementChild.textContent = s.status;
-  document.getElementById('start'+i).disabled = s.status === 'RUNNING';
-  document.getElementById('stop'+i).disabled = s.status !== 'RUNNING';
+  document.getElementById('start'+i).disabled = !opsUnlocked || s.status === 'RUNNING';
+  document.getElementById('stop'+i).disabled = !opsUnlocked || s.status !== 'RUNNING';
   document.getElementById('lastStart'+i).textContent = s.lastStart;
   document.getElementById('lastStop'+i).textContent = s.lastStop;
   document.getElementById('tonight'+i).textContent = Number(s.tonight || 0).toFixed(2) + ' h';
@@ -589,30 +605,59 @@ function setOpsMessage(message,kind) {
 }
 
 function receiveOperationsState(data) {
+  if (opsStateTimeout) { clearTimeout(opsStateTimeout); opsStateTimeout = null; }
   if (!data || !Array.isArray(data.equipment)) return;
   data.equipment.forEach((item,i) => {
     if (i >= opsState.length) return;
     opsState[i] = Object.assign(opsState[i],item);
     renderOperation(i);
   });
-  setOpsMessage('Google Sheets operations log connected.','good');
+  opsUnlocked = true;
+  document.getElementById('opsAccessCode').value = getOpsAccessCode();
+  if (pendingOperation) {
+    const p = pendingOperation;
+    const expected = p.action === 'START' ? 'RUNNING' : 'STOPPED';
+    if (opsState[p.index].status === expected) {
+      setOpsMessage(p.action + ' saved and verified for ' + EQUIPMENT[p.index] + '.','good');
+    } else {
+      setOpsMessage('The event was not confirmed in Google Sheets. Check the access code and try again only after verifying the sheet.','error');
+    }
+    pendingOperation = null;
+  } else {
+    setOpsMessage('Google Sheets operations log connected.','good');
+  }
 }
 
 function loadOperationsState() {
-  if (!OPS_URL || OPS_URL.indexOf('PASTE_') === 0) return;
+  const code = getOpsAccessCode();
+  if (!OPS_URL || OPS_URL.indexOf('PASTE_') === 0 || !code) return;
   const old = document.getElementById('opsStateScript'); if (old) old.remove();
+  if (opsStateTimeout) clearTimeout(opsStateTimeout);
   const script = document.createElement('script'); script.id='opsStateScript';
-  script.onerror = () => setOpsMessage('Could not read operations status from Google Sheets.','error');
-  script.src = OPS_URL + '?action=state&callback=receiveOperationsState&_=' + Date.now();
+  script.onerror = () => setOpsMessage('Could not contact the operations logger. Check the deployment URL and internet connection.','error');
+  script.src = OPS_URL + '?action=state&accessCode=' + encodeURIComponent(code) + '&callback=receiveOperationsState&_=' + Date.now();
   document.body.appendChild(script);
+  opsStateTimeout = window.setTimeout(() => {
+    opsStateTimeout = null;
+    opsUnlocked = false;
+    EQUIPMENT.forEach((_,i) => renderOperation(i));
+    setOpsMessage('Access denied or no response. Check the team access code and Apps Script deployment.','error');
+  },8000);
 }
 
 window.addEventListener('load',() => {
   setDefaultOperationTimes();
   EQUIPMENT.forEach((_,i) => renderOperation(i));
   const frame = document.createElement('iframe'); frame.name='opsSubmitFrame'; frame.style.display='none'; frame.id='opsSubmitFrame'; document.body.appendChild(frame);
-  loadOperationsState();
-  window.setInterval(loadOperationsState,30000);
+  const savedCode = getOpsAccessCode();
+  if (savedCode) {
+    document.getElementById('opsAccessCode').value = savedCode;
+    opsUnlocked = true;
+    loadOperationsState();
+  } else {
+    setOpsMessage('Enter your authorised team access code to connect.','neutral');
+  }
+  window.setInterval(() => { if (getOpsAccessCode()) loadOperationsState(); },30000);
 });
 
 
