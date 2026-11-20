@@ -9,12 +9,12 @@ const OPS_EQUIPMENT = ['Pump House', 'Snow Gun 1', 'Snow Gun 2', 'Snow Gun 3'];
 const OPS_HEADERS = ['Recorded At (PKT)', 'Event Time (PKT)', 'Equipment', 'Action', 'Runtime Hours'];
 
 
-/** Allow only the Google account explicitly configured in Script Properties. */
-function assertOpsAuthorized_() {
-  const allowed = String(PropertiesService.getScriptProperties().getProperty('ALLOWED_EMAIL') || '').trim().toLowerCase();
-  const active = String(Session.getActiveUser().getEmail() || '').trim().toLowerCase();
-  if (!allowed || !active || active !== allowed) {
-    throw new Error('Unauthorized. Configure ALLOWED_EMAIL and deploy to execute as the accessing user.');
+/** Validate the shared team access code stored privately in Script Properties. */
+function assertOpsAuthorized_(params) {
+  const expected = String(PropertiesService.getScriptProperties().getProperty('OPS_ACCESS_CODE') || '');
+  const supplied = String((params || {}).accessCode || '');
+  if (!expected || !supplied || supplied !== expected) {
+    throw new Error('Unauthorized: invalid or missing team access code.');
   }
 }
 
@@ -32,8 +32,8 @@ function getOpsSheet_() {
 
 function doPost(e) {
   try {
-    assertOpsAuthorized_();
     const p = (e && e.parameter) || {};
+    assertOpsAuthorized_(p);
     const equipment = String(p.equipment || '');
     const action = String(p.action || '').toUpperCase();
     const eventTime = new Date(String(p.enteredAt || ''));
@@ -68,10 +68,10 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  try { assertOpsAuthorized_(); } catch (authErr) {
+  const p = (e && e.parameter) || {};
+  try { assertOpsAuthorized_(p); } catch (authErr) {
     return ContentService.createTextOutput('/* Unauthorized operations logger request */');
   }
-  const p = (e && e.parameter) || {};
   if (p.action !== 'state') return ContentService.createTextOutput('MJSR Snowmaking Operations Logger');
   const data = { equipment: [] };
   try {
