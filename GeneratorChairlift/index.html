@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MJSR Generator & Chairlift Operations</title>
+<style>
+:root{color-scheme:dark;--bg:#101820;--panel:#192733;--line:#304554;--text:#edf4f7;--muted:#a8bac4;--green:#36c879;--red:#ed6262;--yellow:#f2c14e}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0d1720,#182b38);color:var(--text);font:15px Arial,sans-serif}
+header{padding:24px 5%;border-bottom:1px solid var(--line);background:#101c25}h1{margin:0;font-size:clamp(22px,4vw,32px)}header p{color:var(--muted);margin:8px 0 0}
+main{max-width:1200px;margin:24px auto;padding:0 16px}.bar,.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:end}.field{flex:1;min-width:190px}label{display:block;color:var(--muted);font-size:13px;margin-bottom:7px}input{width:100%;padding:12px;border-radius:8px;border:1px solid var(--line);background:#0e1a23;color:white;font-size:15px}
+button{border:0;border-radius:8px;padding:12px 18px;font-weight:bold;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}.unlock{background:var(--yellow);color:#17212a}.start{background:var(--green);color:#082216}.stop{background:var(--red);color:#260909}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.machine{background:#1a2b37;border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}.machine h2{margin:0 0 8px;font-size:19px}.status{font-weight:bold;font-size:13px;color:var(--muted)}.status.on{color:var(--green)}.art{height:150px;margin:12px 0;display:flex;align-items:center;justify-content:center;background:#0f1b24;border-radius:10px;overflow:hidden}.gen{width:190px;height:105px;border:5px solid #b7c2c9;border-radius:12px;background:linear-gradient(#e5b83e 0 14%,#536875 14% 100%);position:relative;box-shadow:inset 0 0 0 5px #293b46}.gen:before{content:"";position:absolute;left:15px;top:28px;width:68px;height:55px;border:4px solid #26343c;border-radius:50%;background:repeating-conic-gradient(#d9e0e3 0 8deg,#53636b 8deg 20deg);animation:spin 1s linear infinite;animation-play-state:paused}.gen:after{content:"DIESEL";position:absolute;right:12px;top:43px;color:#fff;font-size:12px;font-weight:bold}.machine.running .gen:before{animation-play-state:running}.genbase{position:absolute}.lift{width:220px;height:130px;position:relative}.tower{position:absolute;left:96px;top:20px;width:12px;height:92px;background:#9daeb7;transform:skew(-10deg)}.wheel{position:absolute;left:67px;top:7px;width:70px;height:70px;border:8px solid #d9a832;border-radius:50%;background:repeating-conic-gradient(#dce5e9 0 5deg,#445762 5deg 15deg);animation:spin 2s linear infinite;animation-play-state:paused}.cable{position:absolute;left:0;top:36px;width:220px;height:3px;background:#dce5e9;transform:rotate(-5deg)}.chair{position:absolute;top:48px;left:20px;width:25px;height:22px;border:3px solid #e8b83e;border-top:0;border-radius:0 0 8px 8px;animation:travel 4s linear infinite;animation-play-state:paused}.machine.running .wheel,.machine.running .chair{animation-play-state:running}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes travel{from{left:12px}to{left:185px}}
+.controls{display:flex;gap:10px;margin-top:12px}.controls button{flex:1}.elapsed{font-size:22px;font-weight:bold;margin-top:10px;font-variant-numeric:tabular-nums}.small{color:var(--muted);font-size:12px;margin-top:8px}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:650px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted)}#message{margin-top:12px;color:var(--yellow);min-height:18px}
+</style>
+</head>
+<body>
+<header><h1>MJSR Generator & Chairlift Operations</h1><p>Equipment operation log · Separate project</p></header>
+<main>
+<section class="bar">
+ <div class="row">
+  <div class="field"><label>Authorised operator name</label><input id="operator" placeholder="Enter operator name"></div>
+  <div class="field"><label>Shared access password</label><input id="code" type="password" placeholder="Enter access password"></div>
+  <button class="unlock" id="unlock">UNLOCK</button>
+ </div><div id="message">Enter your operator name and access password to load the equipment panel.</div>
+</section>
+<section class="grid" id="machines">
+ <article class="machine" data-name="Generator 1"><h2>Generator 1</h2><div class="status">LOCKED</div><div class="art"><div class="gen"></div></div><div class="elapsed">00h 00m</div><div class="small">Operating duration</div><div class="controls"><button class="start" data-action="START" disabled>START</button><button class="stop" data-action="STOP" disabled>STOP</button></div></article>
+ <article class="machine" data-name="Generator 2"><h2>Generator 2</h2><div class="status">LOCKED</div><div class="art"><div class="gen"></div></div><div class="elapsed">00h 00m</div><div class="small">Operating duration</div><div class="controls"><button class="start" data-action="START" disabled>START</button><button class="stop" data-action="STOP" disabled>STOP</button></div></article>
+ <article class="machine" data-name="Generator 3"><h2>Generator 3</h2><div class="status">LOCKED</div><div class="art"><div class="gen"></div></div><div class="elapsed">00h 00m</div><div class="small">Operating duration</div><div class="controls"><button class="start" data-action="START" disabled>START</button><button class="stop" data-action="STOP" disabled>STOP</button></div></article>
+ <article class="machine" data-name="Chairlift"><h2>Chairlift</h2><div class="status">LOCKED</div><div class="art"><div class="lift"><div class="cable"></div><div class="wheel"></div><div class="tower"></div><div class="chair"></div></div></div><div class="elapsed">00h 00m</div><div class="small">Operating duration</div><div class="controls"><button class="start" data-action="START" disabled>START</button><button class="stop" data-action="STOP" disabled>STOP</button></div></article>
+</section>
+<section class="panel"><h2>Latest 20 operation records</h2><div class="tablewrap"><table><thead><tr><th>Date</th><th>Equipment</th><th>Action</th><th>Operator</th><th>Start</th><th>Stop</th><th>Duration (min)</th></tr></thead><tbody id="events"><tr><td colspan="7">Unlock to load records.</td></tr></tbody></table></div></section>
+</main>
+<script>
+const API='https://script.google.com/macros/s/AKfycbxksO1t3zU16I4n0dtbeMzKmXNLHM6iix-elRaPjrt4QzFgVPG9jsg-vQWpay8VoSsU/exec';
+let accessCode='',states={},starts={};
+const $=s=>document.querySelector(s);
+function msg(t){$('#message').textContent=t}
+function timeText(v){if(!v)return '';const d=new Date(v);return isNaN(d)?String(v):d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}
+function duration(ms){let m=Math.max(0,Math.floor(ms/60000));return String(Math.floor(m/60)).padStart(2,'0')+'h '+String(m%60).padStart(2,'0')+'m'}
+function render(data){
+ if(!data.ok){msg(data.error||'Could not load operations');return}
+ states=data.running||{};
+ const body=$('#events');body.innerHTML='';
+ (data.events||[]).forEach(r=>{const tr=document.createElement('tr');[r[0],r[1],r[2],r[3],timeText(r[4]),timeText(r[5]),r[6]||''].forEach(v=>{const td=document.createElement('td');td.textContent=v??'';tr.appendChild(td)});body.appendChild(tr)});
+ if(!body.children.length)body.innerHTML='<tr><td colspan="7">No operation records yet.</td></tr>';
+ document.querySelectorAll('.machine').forEach(card=>{
+  const name=card.dataset.name,on=!!states[name];card.classList.toggle('running',on);
+  card.querySelector('.status').textContent=on?'● RUNNING':'● STOPPED';card.querySelector('.status').classList.toggle('on',on);
+  card.querySelector('.start').disabled=on;card.querySelector('.stop').disabled=!on;
+ });
+}
+function load(){
+ const cb='mjsrOpsCb'+Date.now();window[cb]=data=>{render(data);delete window[cb]};
+ const s=document.createElement('script');s.src=API+'?code='+encodeURIComponent(accessCode)+'&callback='+cb;s.onerror=()=>msg('Could not connect to the operations server.');document.body.appendChild(s);
+}
+$('#unlock').onclick=()=>{
+ const name=$('#operator').value.trim(),code=$('#code').value;
+ if(!name||!code){msg('Enter operator name and password.');return}
+ accessCode=code;sessionStorage.setItem('mjsrGenChairCode',code);sessionStorage.setItem('mjsrGenChairOperator',name);
+ document.querySelectorAll('.controls button').forEach(b=>b.disabled=false);msg('Loading equipment status…');load();
+};
+document.querySelectorAll('.machine button').forEach(btn=>btn.onclick=async()=>{
+ const card=btn.closest('.machine'),equipment=card.dataset.name,action=btn.dataset.action,operator=$('#operator').value.trim();
+ if(!accessCode||!operator){msg('Unlock and enter operator name first.');return}
+ btn.disabled=true;msg(action+' request: '+equipment+'…');
+ const payload={code:accessCode,action,equipment,operator};
+ try{
+  await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'payload='+encodeURIComponent(JSON.stringify(payload))});
+  msg(action+' request sent for '+equipment+'. Refreshing recorded status…');
+  setTimeout(load,1800);
+ }catch(e){msg('Could not send operation request. Check connection.');btn.disabled=false}
+});
+const savedCode=sessionStorage.getItem('mjsrGenChairCode'),savedOperator=sessionStorage.getItem('mjsrGenChairOperator');
+if(savedCode&&savedOperator){$('#code').value=savedCode;$('#operator').value=savedOperator}
+</script>
+</body></html>
